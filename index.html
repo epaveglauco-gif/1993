@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sebenta Dinâmica UC 1993</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: bancada de laboratório — cabeçalho tipo placa, separadores Parte 1 (CC) / Parte 2 (CA), barra lateral com os capítulos e área de trabalho com teoria, instrumentos (simuladores) e exercícios. Mesma linguagem visual da página Corrente Contínua. */
+:root{
+  --bg:#F1F5FC; --surface:#FFFFFF; --sunk:#EDF2FA; --ink:#13213D; --muted:#55627C; --line:#D2DBEB;
+  --accent:#F26B1D; --accent-ink:#B2480A; --accent-soft:#FFE8D7;
+  --pcb:#1D6FE0; --pcb-soft:#E0ECFD; --ok:#178A4A; --ok-soft:#DDF4E6; --bad:#C62828; --bad-soft:#FBE3E1;
+  --warn:#9A6400; --warn-soft:#FFF3D6;
+  --ca:#7A3FC4; --ca-soft:#EFE6FB;
+  --fill-1:#1D6FE0; --fill-2:#6B34B8;
+  --hero:#0D2A5E; --hero-2:#123B80; --hero-ink:#FFFFFF; --hero-muted:#B7C8EA; --spark:#FFC247;
+  --lcd:#0A1A33; --lcd-ink:#62F0D6; --lcd-2:#FFC247; --lcd-grid:rgba(98,240,214,.14);
+  --display:"Familjen Grotesk","Arial Narrow",Arial,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1324; --surface:#121F3A; --sunk:#0E1930; --ink:#E7EDF8; --muted:#9BA9C4; --line:#253658;
+  --accent:#FF8F45; --accent-ink:#FFB27D; --accent-soft:#3B2412;
+  --pcb:#5EA4FF; --pcb-soft:#16305A; --ok:#5FD392; --ok-soft:#123323; --bad:#FF8A80; --bad-soft:#3D1A1A;
+  --warn:#F2B84B; --warn-soft:#3A2C10; --ca:#B48CF2; --ca-soft:#2A1E45;
+  --hero:#0A1E45; --hero-2:#11306A; --hero-ink:#FFFFFF; --hero-muted:#AFC2E8; --spark:#FFC247;
+  --lcd:#050E1F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1324; --surface:#121F3A; --sunk:#0E1930; --ink:#E7EDF8; --muted:#9BA9C4; --line:#253658;
+  --accent:#FF8F45; --accent-ink:#FFB27D; --accent-soft:#3B2412;
+  --pcb:#5EA4FF; --pcb-soft:#16305A; --ok:#5FD392; --ok-soft:#123323; --bad:#FF8A80; --bad-soft:#3D1A1A;
+  --warn:#F2B84B; --warn-soft:#3A2C10; --ca:#B48CF2; --ca-soft:#2A1E45;
+  --hero:#0A1E45; --hero-2:#11306A; --hero-ink:#FFFFFF; --hero-muted:#AFC2E8; --spark:#FFC247;
+  --lcd:#050E1F; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+input[type=range]:disabled{opacity:.35}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.58;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(1.4rem,3vw,1.75rem);font-weight:700}
+h3{font-size:1.18rem;font-weight:700}
+h4{font-size:1rem;font-weight:600}
+p{margin:0;max-width:68ch}
+a{color:var(--pcb)}
+img{max-width:100%}
+.mono,code{font-family:var(--mono);font-variant-numeric:tabular-nums}
+code{font-size:.88em;background:var(--sunk);border:1px solid var(--line);border-radius:4px;padding:0 .3em}
+sub,sup{font-size:.72em;line-height:0}
+
+/* cabeçalho */
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px 24px;padding:26px 26px 22px;border-radius:14px;color:var(--hero-ink);
+  background:
+    linear-gradient(90deg,transparent 0 calc(100% - 1px),rgba(255,255,255,.07) 0) 0 0/32px 32px,
+    linear-gradient(0deg,transparent 0 calc(100% - 1px),rgba(255,255,255,.07) 0) 0 0/32px 32px,
+    linear-gradient(120deg,var(--hero),var(--hero-2));
+  box-shadow:inset 0 -4px 0 var(--accent)}
+header.top .eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--spark);margin-bottom:6px}
+header.top h1{color:var(--hero-ink)}
+header.top h1::after{content:"";display:block;width:64px;height:4px;border-radius:2px;margin-top:10px;background:var(--spark)}
+header.top .sub{color:var(--hero-muted);margin-top:8px;font-size:.98rem}
+.who{font-size:.9rem;color:var(--hero-muted);text-align:right}
+.who b{color:var(--hero-ink)}
+
+/* separadores das partes */
+.parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0 22px}
+.parts button{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:14px 18px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--muted);transition:background .15s}
+.parts button .k{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase}
+.parts button .t{font-family:var(--display);font-weight:700;font-size:1.2rem;color:var(--ink)}
+.parts button .d{font-size:.86rem}
+.parts button[data-part="1"][aria-pressed="true"]{background:var(--fill-1);border-color:var(--fill-1);color:#DCE8FF;box-shadow:inset 0 -4px 0 var(--spark)}
+.parts button[data-part="2"][aria-pressed="true"]{background:var(--fill-2);border-color:var(--fill-2);color:#F0E6FF;box-shadow:inset 0 -4px 0 var(--spark)}
+.parts button[aria-pressed="true"] .t{color:#fff}
+.parts button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* grelha principal */
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:28px;align-items:start}
+nav.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:2px}
+nav.side .nh{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 10px 6px}
+nav.side button{all:unset;cursor:pointer;display:grid;grid-template-columns:2.2em 1fr;align-items:baseline;padding:7px 10px;border-radius:6px;color:var(--muted);font-size:.94rem}
+nav.side button .n{font-family:var(--mono);font-size:.78rem}
+nav.side button:hover{background:var(--surface);color:var(--ink)}
+nav.side button[aria-current="true"]{background:var(--fill-1);color:#fff;font-weight:700;box-shadow:inset 4px 0 0 var(--spark)}
+body[data-part="2"] nav.side button[aria-current="true"]{background:var(--fill-2)}
+nav.side button[aria-current="true"] .n{color:var(--spark)}
+nav.side button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.score{margin-top:14px;padding:12px;border:1px dashed var(--line);border-radius:8px;font-size:.85rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.score b{font-family:var(--mono);color:var(--pcb);font-size:1.05rem}
+.meter{height:8px;border-radius:4px;background:var(--sunk);border:1px solid var(--line);overflow:hidden}
+.meter span{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+nav.side .score button{all:unset;display:block;padding:0;cursor:pointer;font-size:.8rem;color:var(--accent-ink);text-decoration:underline;align-self:flex-start;white-space:nowrap;width:auto}
+
+/* secções */
+section.topic{display:flex;flex-direction:column;gap:22px;min-width:0}
+section.topic[hidden]{display:none}
+.chap-head{display:flex;flex-direction:column;gap:8px;padding-bottom:4px}
+.kicker{font-family:var(--mono);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink)}
+.chap-head h2::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--accent);margin-right:10px;vertical-align:.18em;box-shadow:0 0 0 4px var(--accent-soft)}
+.lead{font-size:1.06rem;color:var(--muted)}
+.sec{display:flex;flex-direction:column;gap:12px}
+.sec>h3{padding-top:6px;border-top:1px solid var(--line);padding-top:16px}
+.sec>h3 .num{font-family:var(--mono);color:var(--accent-ink);font-size:.95rem;margin-right:6px}
+ul.facts,ol.facts{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;max-width:68ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px;align-items:start}
+
+.formula{font-family:var(--mono);font-size:1.18rem;background:var(--sunk);border:1px solid var(--line);border-left:4px solid var(--pcb);border-radius:8px;padding:12px 16px;overflow-x:auto;display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline}
+body[data-part="2"] .formula{border-left-color:var(--ca)}
+.formula small{flex-basis:100%;font-size:.8rem;color:var(--muted);font-family:var(--body)}
+.note{border-radius:8px;padding:12px 14px;font-size:.95rem;background:var(--pcb-soft);border:1px solid var(--line);max-width:76ch}
+.note b:first-child{color:var(--pcb)}
+.note.warn{background:var(--warn-soft)} .note.warn b:first-child{color:var(--warn)}
+.note.danger{background:var(--bad-soft)} .note.danger b:first-child{color:var(--bad)}
+
+figure.fig{margin:0;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+figure.fig .pic{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;justify-content:center;max-width:100%}
+figure.fig img{display:block;height:auto;max-height:340px;object-fit:contain}
+figure.fig.sm img{max-height:220px}
+figcaption{font-size:.82rem;color:var(--muted)}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:400;background:var(--sunk)}
+td.m{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tcap{font-size:.82rem;color:var(--muted);margin-bottom:6px}
+
+/* exemplos resolvidos */
+details.worked{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--ok);border-radius:8px;padding:10px 14px}
+details.worked summary{cursor:pointer;font-weight:700;color:var(--ink);list-style:none;display:flex;gap:10px;align-items:baseline}
+details.worked summary::-webkit-details-marker{display:none}
+details.worked summary::before{content:"+";font-family:var(--mono);color:var(--ok);font-weight:700;width:1em}
+details.worked[open] summary::before{content:"−"}
+details.worked summary .q{font-weight:400;color:var(--muted)}
+.steps{margin-top:10px;font-family:var(--mono);font-size:.9rem;display:flex;flex-direction:column;gap:4px;overflow-x:auto}
+.steps .c{font-family:var(--body);color:var(--muted);font-size:.9rem}
+
+/* instrumentos */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel.tool{border-top:3px solid var(--pcb);background:linear-gradient(180deg,var(--pcb-soft),var(--surface) 110px)}
+body[data-part="2"] .panel.tool{border-top-color:var(--ca);background:linear-gradient(180deg,var(--ca-soft),var(--surface) 110px)}
+.tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--pcb)}
+body[data-part="2"] .panel.tool .tag{color:var(--ca)}
+.panel h4{font-size:1.08rem}
+.tool-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;align-items:start}
+@media (max-width:860px){.tool-body{grid-template-columns:minmax(0,1fr)}}
+.ctrls{display:flex;flex-direction:column;gap:12px}
+.rng{display:grid;grid-template-columns:minmax(6.5em,auto) minmax(0,1fr) 6.2em;gap:10px;align-items:center}
+.rng label{font-size:.88rem;color:var(--muted)}
+.rng output{font-family:var(--mono);font-size:.88rem;text-align:right;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld label{font-size:.82rem;color:var(--muted)}
+input[type=text],input[type=number],select{font:inherit;font-family:var(--mono);font-size:.95rem;color:var(--ink);background:var(--sunk);border:1px solid var(--line);padding:7px 9px;border-radius:6px;min-width:0}
+input[type=number]{width:7.5em}
+input:focus-visible,select:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.btn{display:inline-block;text-decoration:none;font:inherit;font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:#fff;padding:7px 14px;border-radius:6px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:hover{filter:brightness(1.1)}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:7px;overflow:hidden;align-self:flex-start}
+.seg button{font:inherit;font-size:.88rem;border:0;background:var(--surface);color:var(--muted);padding:6px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--fill-1);color:#fff;font-weight:700}
+body[data-part="2"] .seg button[aria-pressed="true"]{background:var(--fill-2)}
+
+.readout{background:var(--lcd);color:var(--lcd-ink);border-radius:10px;padding:12px 16px;font-family:var(--mono);display:grid;grid-template-columns:repeat(auto-fill,minmax(9.5em,1fr));gap:8px 16px;border:2px solid #22324f;box-shadow:inset 0 0 18px rgba(98,240,214,.12)}
+.readout div{display:flex;flex-direction:column;min-width:0}
+.readout .k{font-size:.72rem;color:#B9CBE6;letter-spacing:.04em}
+.readout .v{font-size:1.12rem;font-weight:600;text-shadow:0 0 10px rgba(98,240,214,.35);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.readout .v.hi{color:var(--lcd-2);text-shadow:0 0 10px rgba(255,194,71,.35)}
+.readout .wide{grid-column:1/-1}
+canvas.scope,svg.plot{width:100%;height:auto;display:block;border-radius:10px}
+canvas.scope{background:var(--lcd);border:2px solid #22324f}
+svg.plot{background:var(--surface);border:1px solid var(--line)}
+svg.plot text{font-family:var(--mono);font-size:12px;fill:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:6px;vertical-align:.25em}
+.state{display:inline-block;font-family:var(--mono);font-size:.78rem;padding:2px 9px;border-radius:999px;border:1px solid currentColor}
+.state.ind{color:var(--pcb)} .state.cap{color:var(--accent-ink)} .state.res{color:var(--ok)}
+
+/* resistência de cores */
+.resistor svg{width:100%;max-width:440px;height:auto;display:block;margin:0 auto}
+.band-row{display:flex;flex-direction:column;gap:5px}
+.band-row .lbl{font-size:.8rem;color:var(--muted)}
+.sw{display:flex;flex-wrap:wrap;gap:5px}
+.sw button{width:28px;height:28px;border-radius:5px;border:2px solid var(--line);cursor:pointer;padding:0}
+.sw button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--accent)}
+.rlist{display:flex;flex-direction:column;gap:6px}
+.rlist .r{display:grid;grid-template-columns:2.6em minmax(0,1fr) 2.2em 32px;gap:8px;align-items:center}
+.rlist .r span{font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+.rlist .r input{width:100%}
+.rlist .r button{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:6px;cursor:pointer;width:32px;height:32px;font-size:1rem}
+
+/* exercícios */
+.exs{display:flex;flex-direction:column;gap:12px}
+.exs>h3{border-top:1px solid var(--line);padding-top:16px}
+.ex{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.ex.done{border-top-color:var(--ok)}
+.ex .q{max-width:72ch}
+.ex .q b.n{font-family:var(--mono);color:var(--accent-ink);margin-right:6px}
+.ain{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.ain .in{display:inline-flex;align-items:center;gap:6px}
+.ain .in label{font-family:var(--mono);font-size:.9rem}
+.ain .in input{width:7.5em}
+.ain .in .u{font-family:var(--mono);font-size:.85rem;color:var(--muted)}
+.ain .in input.ok{border-color:var(--ok);background:var(--ok-soft)}
+.ain .in input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.fb{font-size:.92rem;padding:7px 12px;border-radius:6px}
+.fb:empty{display:none}
+.fb.ok{background:var(--ok-soft);color:var(--ok)} .fb.bad{background:var(--bad-soft);color:var(--bad)}
+.ex details summary{cursor:pointer;font-size:.9rem;color:var(--accent-ink);font-weight:700}
+.ex .sol{margin-top:8px;font-family:var(--mono);font-size:.88rem;display:flex;flex-direction:column;gap:3px;overflow-x:auto}
+.ex .sol .c{font-family:var(--body)}
+
+/* teste */
+.quiz{display:flex;flex-direction:column;gap:14px}
+.qq{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.qq .opts{display:flex;flex-direction:column;gap:6px}
+.qq .opts button{all:unset;cursor:pointer;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--sunk);font-size:.95rem}
+.qq .opts button:hover{border-color:var(--pcb)}
+.qq .opts button:focus-visible{outline:2px solid var(--accent)}
+.qq .opts button.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:700}
+.qq .opts button.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.qq .why{font-size:.9rem;color:var(--muted)}
+.panel.send{border-top:3px solid var(--accent)}
+.panel.send input[type=text]{width:100%}
+.vgroup{display:flex;flex-direction:column;gap:10px}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+a.vcard{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--ink);text-decoration:none}
+a.vcard:hover{border-color:var(--accent)}
+a.vcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a.vcard .play{width:44px;height:32px;border-radius:8px;background:#E53935;display:grid;place-items:center}
+a.vcard .play::after{content:"";border-left:12px solid #fff;border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px}
+a.vcard .t{font-weight:700;line-height:1.3}
+a.vcard .m{font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap}
+a.vcard .en{color:var(--accent-ink)}
+.vchips{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.88rem}
+.vchips a{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);text-decoration:none}
+.vchips a::before{content:"";border-left:8px solid #E53935;border-top:5px solid transparent;border-bottom:5px solid transparent}
+.vchips a:hover{border-color:var(--accent)}
+.quizbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:10px;background:var(--lcd);color:var(--lcd-ink);font-family:var(--mono)}
+
+/* cartões de abertura */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.card.p1{border-top:4px solid var(--pcb)} .card.p2{border-top:4px solid var(--ca)}
+.card ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:3px}
+.pager{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:16px}
+.foot{margin-top:40px;display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;justify-content:space-between;font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+.foot .logos{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#fff;border-radius:8px;padding:6px 10px}
+.foot .logos img{height:30px;width:auto}
+
+@media (max-width:860px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  nav.side{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:6px;scrollbar-width:thin}
+  nav.side .nh{display:none}
+  nav.side button{grid-template-columns:auto auto;gap:6px;white-space:nowrap;border:1px solid var(--line);background:var(--surface)}
+  .score{display:none}
+  .who{text-align:left}
+  .parts button .d{display:none}
+}
+@media (max-width:420px){.rng{grid-template-columns:minmax(0,1fr) 6em}.rng input[type=range]{grid-column:1/-1;grid-row:2}}
+@media (prefers-reduced-motion:no-preference){section.topic:not([hidden]){animation:in .22s ease-out}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
+</style>
+</head>
+<body data-part="1">
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">UC 1993 · Eletricidade e Eletrónica · 45 h</div>
+      <h1>Executar análise de circuitos RLC</h1>
+      <p class="sub">Sebenta dinâmica: teoria, simuladores e exercícios com correção automática.</p>
+    </div>
+    <div class="who">Professor <b>Glauco Barbosa</b><br><span class="mono">Epave.glauco@gmail.com</span><br>EPAVE · 2026/2027</div>
+  </header>
+
+  <div class="parts" role="group" aria-label="Partes da UC">
+    <button type="button" data-part="1" aria-pressed="true"><span class="k">Parte 1 · cap. 1–5</span><span class="t">Corrente contínua</span><span class="d">Fundamentos, condensadores, magnetismo, indução e bobines</span></button>
+    <button type="button" data-part="2" aria-pressed="false"><span class="k">Parte 2 · cap. 6–11</span><span class="t">Corrente alternada</span><span class="d">Sinusoide, R L C, RLC, ressonância, potências e trifásico</span></button>
+  </div>
+
+  <div class="layout">
+    <nav class="side" id="nav" aria-label="Capítulos"></nav>
+    <main id="main">
+
+<!-- ====================== APRESENTAÇÃO ====================== -->
+<section class="topic" id="inicio" data-part="0">
+  <div class="chap-head">
+    <span class="kicker">Apresentação · 4,5 pontos de crédito</span>
+    <h2>Como usar esta sebenta</h2>
+    <p class="lead">Esta sebenta acompanha a UC 1993 – Executar análise de circuitos RLC. Reúne, por ordem de aula, os conteúdos das duas apresentações: a Parte 1, sobre corrente contínua, condensadores, magnetismo, indução e bobines; e a Parte 2, sobre corrente alternada, circuitos RLC, potências e sistemas trifásicos.</p>
+  </div>
+  <div class="cards">
+    <div class="card p1">
+      <span class="tag">Parte 1 · Corrente contínua</span>
+      <ol>
+        <li><a href="#cap-1">Fundamentos de eletricidade</a></li>
+        <li><a href="#cap-2">Condensadores</a></li>
+        <li><a href="#cap-3">Magnetismo e eletromagnetismo</a></li>
+        <li><a href="#cap-4">Indução eletromagnética</a></li>
+        <li><a href="#cap-5">Indutores (bobines)</a></li>
+      </ol>
+      <p><a href="#teste-1">Teste rápido da Parte 1</a></p>
+    </div>
+    <div class="card p2">
+      <span class="tag" style="color:var(--ca)">Parte 2 · Corrente alternada</span>
+      <ol start="6">
+        <li><a href="#cap-6">Corrente alternada sinusoidal</a></li>
+        <li><a href="#cap-7">Circuitos R, L e C em CA</a></li>
+        <li><a href="#cap-8">Circuitos RLC série e paralelo</a></li>
+        <li><a href="#cap-9">Ressonância</a></li>
+        <li><a href="#cap-10">Potências e fator de potência</a></li>
+        <li><a href="#cap-11">Sistemas trifásicos</a></li>
+      </ol>
+      <p><a href="#lab">Laboratório</a> · <a href="#videos">Vídeos de apoio</a> · <a href="#formulario">Formulário</a> · <a href="#teste-2">Teste rápido da Parte 2</a></p>
+    </div>
+  </div>
+  <div class="sec">
+    <h3>O que tem cada capítulo</h3>
+    <ul class="facts">
+      <li><b>Teoria</b> com as fórmulas em caixas destacadas e as figuras da sebenta.</li>
+      <li><b>Exemplos resolvidos</b>: clique no título para ver a resolução passo a passo.</li>
+      <li><b>Instrumentos</b>: simuladores e calculadoras. Mude os valores e veja o circuito reagir.</li>
+      <li><b>Exercícios</b>: escreva o resultado na unidade indicada e carregue em Verificar. Pode usar vírgula ou ponto. Aceita-se um erro de arredondamento de cerca de 2 %.</li>
+    </ul>
+    <div class="note"><b>Convenções.</b> Nas fórmulas, as letras minúsculas (u, i) representam valores instantâneos e as maiúsculas (U, I) valores eficazes ou constantes. Os números decimais usam vírgula, como é norma em Portugal.</div>
+  </div>
+  <div class="sec">
+    <h3>Realizações da UC</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Realização da UC</th><th>Capítulos</th></tr></thead>
+      <tbody>
+        <tr><td>Caracterizar as interações eletromagnéticas</td><td class="m">3, 4 e 5</td></tr>
+        <tr><td>Caracterizar a corrente alternada sinusoidal</td><td class="m">6</td></tr>
+        <tr><td>Calcular grandezas elétricas em circuitos RLC série e paralelo</td><td class="m">1, 2, 7, 8 e 9</td></tr>
+        <tr><td>Determinar o valor de compensação do fator de potência</td><td class="m">10</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 1 ====================== -->
+<section class="topic" id="cap-1" data-part="1" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 1 · Parte 1, slides 1–42</span>
+    <h2>Fundamentos de eletricidade</h2>
+    <p class="lead">Antes de estudar circuitos em corrente alternada é preciso dominar as grandezas básicas da corrente contínua (CC): carga, corrente, tensão, resistência e potência, e as leis que as relacionam.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.1</span>Eletricidade e eletrónica</h3>
+    <p>A eletricidade estuda os fenómenos que resultam da presença de cargas elétricas. As cargas paradas são objeto da eletricidade estática; as cargas em movimento constituem a corrente elétrica. A eletrónica estuda o controlo do fluxo de eletrões em circuitos com componentes como díodos, transístores e circuitos integrados.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.2</span>Carga elétrica e campo elétrico</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>A matéria é formada por átomos com protões (carga positiva) e eletrões (carga negativa). Um corpo com igual número de cargas positivas e negativas diz-se eletricamente neutro. Cargas do mesmo sinal repelem-se e cargas de sinais opostos atraem-se.</p>
+        <p>A carga elétrica representa-se por <b>Q</b> e mede-se em <b>coulomb (C)</b>. Um coulomb corresponde à carga de cerca de 6,25 × 10<sup>18</sup> eletrões. À região à volta de uma carga, onde outra carga fica sujeita a uma força, chama-se campo elétrico.</p>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/campo-eletrico.webp" alt="Cargas positivas entre duas placas, empurradas no sentido das linhas de campo" loading="lazy"></div><figcaption>Figura 1 – Cargas positivas num campo elétrico uniforme ficam sujeitas a uma força no sentido das linhas de campo</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.3</span>Corrente elétrica</h3>
+    <p>A corrente elétrica é o movimento ordenado e orientado de partículas com carga. Nos metais, essas partículas são os eletrões livres, fracamente ligados aos núcleos, que se deslocam sob a ação de um campo elétrico. Os condutores (cobre, prata, alumínio) têm muitos eletrões livres; os isoladores (plástico, borracha, baquelite) praticamente não os têm.</p>
+    <p>Antes de se conhecer o eletrão, convencionou-se que a corrente circula do polo positivo para o negativo. Os eletrões deslocam-se, na realidade, em sentido contrário, mas o sentido convencional manteve-se e é o que se usa nos esquemas.</p>
+    <div class="formula">I = Q / t<small>I em ampere (A), Q em coulomb (C) e t em segundos (s).</small></div>
+    <details class="worked"><summary>Exemplo resolvido 1.1 <span class="q">Uma carga de 3600 μC atravessa a secção de um fio em 12 s. Qual é a intensidade da corrente?</span></summary>
+      <div class="steps"><div>I = Q / t = 3600 × 10⁻⁶ / 12 = 300 μA (0,3 mA)</div></div></details>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.4</span>Potencial e diferença de potencial</h3>
+    <p>O potencial elétrico num ponto é o trabalho necessário, por unidade de carga, para levar uma carga do infinito (potencial zero) até esse ponto. A diferença de potencial (d.d.p.) ou tensão entre dois pontos é o trabalho necessário para deslocar uma carga unitária de um ponto ao outro. Representa-se por <b>U</b> (ou V) e mede-se em <b>volt (V)</b>.</p>
+    <p>Para haver corrente é necessário um campo elétrico no condutor, isto é, uma diferença de potencial entre as suas extremidades. É isso que fornecem as pilhas, as baterias e os geradores.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.5</span>Grandezas e unidades</h3>
+    <div class="grid2">
+      <div><div class="tcap">Principais grandezas elétricas</div><div class="tbl"><table>
+        <thead><tr><th>Grandeza</th><th>Símbolo</th><th>Unidade SI</th></tr></thead>
+        <tbody>
+          <tr><td>Carga elétrica</td><td class="m">Q</td><td>coulomb (C)</td></tr>
+          <tr><td>Intensidade da corrente</td><td class="m">I</td><td>ampere (A)</td></tr>
+          <tr><td>Tensão (d.d.p.)</td><td class="m">U ou V</td><td>volt (V)</td></tr>
+          <tr><td>Resistência elétrica</td><td class="m">R</td><td>ohm (Ω)</td></tr>
+          <tr><td>Potência elétrica</td><td class="m">P</td><td>watt (W)</td></tr>
+          <tr><td>Energia elétrica</td><td class="m">W ou E</td><td>joule (J); na prática kWh (1 kWh = 3,6 MJ)</td></tr>
+        </tbody></table></div></div>
+      <div><div class="tcap">Múltiplos e submúltiplos mais usados</div><div class="tbl"><table>
+        <thead><tr><th>Prefixo</th><th>Símbolo</th><th>Fator</th><th>Exemplo</th></tr></thead>
+        <tbody>
+          <tr><td>mega</td><td class="m">M</td><td class="m">10⁶</td><td class="m">1 MΩ = 1 000 000 Ω</td></tr>
+          <tr><td>quilo</td><td class="m">k</td><td class="m">10³</td><td class="m">3,3 kΩ = 3300 Ω</td></tr>
+          <tr><td>mili</td><td class="m">m</td><td class="m">10⁻³</td><td class="m">50 mA = 0,05 A</td></tr>
+          <tr><td>micro</td><td class="m">μ</td><td class="m">10⁻⁶</td><td class="m">100 μF = 0,0001 F</td></tr>
+          <tr><td>nano</td><td class="m">n</td><td class="m">10⁻⁹</td><td class="m">100 nF = 0,1 μF</td></tr>
+          <tr><td>pico</td><td class="m">p</td><td class="m">10⁻¹²</td><td class="m">22 pF</td></tr>
+        </tbody></table></div></div>
+    </div>
+    <div class="panel tool" data-tool="prefixos"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.6</span>Resistência e resistividade</h3>
+    <p>A resistência elétrica é a oposição que um corpo oferece à passagem da corrente, devida à dificuldade dos eletrões em se moverem na estrutura atómica do material. Ao passar a corrente, a energia é dissipada sob a forma de calor. Num condutor de comprimento L e secção S, a resistência depende do material através da sua resistividade ρ:</p>
+    <div class="formula">R = ρ · L / S<small>R em ohm (Ω); ρ em Ω·m; L em metros; S em m².</small></div>
+    <ul class="facts">
+      <li>A resistência aumenta com o comprimento e diminui com a secção.</li>
+      <li>Depende também do material e da temperatura (nos metais, aumenta com a temperatura).</li>
+      <li>Resistividades a 20 °C: prata 1,6 × 10⁻⁸ Ω·m; cobre 1,7 × 10⁻⁸ Ω·m; alumínio 2,8 × 10⁻⁸ Ω·m.</li>
+    </ul>
+    <details class="worked"><summary>Exemplo resolvido 1.2 <span class="q">Resistência de um fio de cobre com 4 mm de diâmetro e 10 km de comprimento.</span></summary>
+      <div class="steps"><div>S = π × d² / 4 = π × (4 × 10⁻³)² / 4 = 12,57 × 10⁻⁶ m²</div><div>R = 1,7 × 10⁻⁸ × 10 000 / 12,57 × 10⁻⁶ = 13,5 Ω</div></div></details>
+    <div class="panel tool" data-tool="resistividade"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.7</span>Código de cores das resistências</h3>
+    <p>O valor das resistências de baixa potência é indicado por anéis coloridos. No código de quatro anéis, os dois primeiros são algarismos, o terceiro é o multiplicador (número de zeros) e o quarto é a tolerância.</p>
+    <figure class="fig"><div class="pic"><img src="img/codigo-cores.webp" alt="Tabela do código de cores: algarismos, multiplicador e tolerância de cada cor" loading="lazy"></div><figcaption>Figura 2 – Código de cores das resistências</figcaption></figure>
+    <details class="worked"><summary>Exemplo resolvido 1.3 <span class="q">Qual é o valor de uma resistência laranja – azul – vermelho – dourado?</span></summary>
+      <div class="steps"><div>Laranja = 3; azul = 6; vermelho = × 100; dourado = ± 5 %</div><div>R = 36 × 100 = 3,6 kΩ ± 5 %, isto é, entre 3,42 kΩ e 3,78 kΩ</div></div></details>
+    <div class="panel tool" data-tool="cores"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.8</span>Lei de Ohm</h3>
+    <p>Georg Ohm verificou que, num condutor a temperatura constante, a corrente é diretamente proporcional à tensão aplicada. Para a mesma resistência, se a tensão duplica, a corrente duplica. Para a mesma tensão, a corrente e a resistência são inversamente proporcionais: se R aumenta, I diminui.</p>
+    <div class="formula"><span>U = R · I</span><span>I = U / R</span><span>R = U / I</span></div>
+    <details class="worked"><summary>Exemplo resolvido 1.4 <span class="q">Uma resistência percorrida por 150 μA tem aos seus terminais 1,8 V. Qual é o seu valor?</span></summary>
+      <div class="steps"><div>R = U / I = 1,8 / 150 × 10⁻⁶ = 12 000 Ω = 12 kΩ</div></div></details>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.9</span>Potência elétrica e efeito Joule</h3>
+    <p>A passagem da corrente por um condutor aquece-o: os eletrões chocam com os átomos e a energia elétrica transforma-se em calor. É o efeito Joule, útil em aquecedores, secadores, ferros de engomar e fornos, e indesejado nos cabos e componentes, onde representa perdas.</p>
+    <div class="formula"><span>P = U · I = R · I² = U² / R</span><span>W = P · t</span><small>P em watt (W); W em joule (J) ou, na prática, em quilowatt-hora (kWh), com P em kW e t em horas.</small></div>
+    <details class="worked"><summary>Exemplo resolvido 1.5 <span class="q">Uma resistência de 50 Ω é percorrida por 2 A durante 2 horas. Calcule a potência e a energia consumida.</span></summary>
+      <div class="steps"><div>P = R · I² = 50 × 2² = 200 W</div><div>W = P · t = 0,2 kW × 2 h = 0,4 kWh</div></div></details>
+    <div class="panel tool" data-tool="ohm"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.10</span>Associação de resistências</h3>
+    <p>Em série, as resistências são percorridas pela mesma corrente e a tensão total divide-se por elas. Em paralelo, estão todas sujeitas à mesma tensão e a corrente total divide-se pelos ramos.</p>
+    <div class="grid2">
+      <figure class="fig sm"><div class="pic"><img src="img/r-serie.webp" alt="Três resistências em série entre A e B" loading="lazy"></div><figcaption>Figura 3 – Resistências em série</figcaption></figure>
+      <figure class="fig sm"><div class="pic"><img src="img/r-paralelo.webp" alt="Três resistências em paralelo entre A e B" loading="lazy"></div><figcaption>Figura 4 – Resistências em paralelo</figcaption></figure>
+    </div>
+    <div class="formula"><span>Série: Req = R1 + R2 + R3 + …</span><span>Paralelo: 1/Req = 1/R1 + 1/R2 + 1/R3 + …</span><span>Duas: Req = R1·R2 / (R1 + R2)</span></div>
+    <div class="note"><b>Regra prática.</b> Em série, Req é sempre maior do que a maior das resistências. Em paralelo, é sempre menor do que a menor. Uma associação mista resolve-se por partes, substituindo grupos série ou paralelo pela sua resistência equivalente.</div>
+    <details class="worked"><summary>Exemplo resolvido 1.6 <span class="q">R1 = 100 Ω está em série com o paralelo de R2 = 220 Ω e R3 = 330 Ω. Calcule Req.</span></summary>
+      <div class="steps"><div>R23 = 220 × 330 / (220 + 330) = 132 Ω</div><div>Req = 100 + 132 = 232 Ω</div></div></details>
+    <div class="panel tool" data-tool="assoc" data-kind="R"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.11</span>Associação de geradores</h3>
+    <p>Em série aditiva (polo + de um ligado ao − do seguinte), as tensões somam-se: Ueq = U1 + U2 + … Em série subtrativa (polos iguais ligados), subtraem-se. Em paralelo, só se associam geradores de tensões iguais: a tensão mantém-se e as correntes fornecidas somam-se, o que permite fornecer mais corrente.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">1.12</span>Aparelhos de medida</h3>
+    <div class="grid2">
+      <ul class="facts">
+        <li><b>Voltímetro:</b> mede a tensão; liga-se em paralelo com o elemento. Deve ter resistência interna muito elevada, para não desviar corrente.</li>
+        <li><b>Amperímetro:</b> mede a corrente; liga-se em série, abrindo o circuito. Deve ter resistência interna muito baixa, para não alterar a corrente.</li>
+        <li><b>Ohmímetro:</b> mede a resistência com o circuito desligado e o componente isolado do resto do circuito.</li>
+        <li><b>Wattímetro:</b> mede a potência ativa; tem um circuito de tensão (paralelo) e um de corrente (série).</li>
+        <li><b>Multímetro:</b> reúne as funções anteriores; deve escolher-se a grandeza e a escala antes de ligar.</li>
+        <li><b>Osciloscópio:</b> mostra a forma de onda de uma tensão no tempo (<a href="#cap-6">capítulo 6</a>).</li>
+      </ul>
+      <figure class="fig"><div class="pic"><img src="img/aparelhos-medida.webp" alt="Circuito com amperímetro em série e voltímetro em paralelo com a resistência" loading="lazy"></div><figcaption>Figura 5 – O amperímetro liga-se em série e o voltímetro em paralelo</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="1-1"><p class="q"><b class="n">1.</b>Calcule a carga que atravessa a secção de um condutor durante 5 minutos, com uma corrente de 50 mA.</p>
+      <div class="ain"><span class="in" data-ans="15" data-u="C">Q =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>t = 5 × 60 = 300 s</div><div>Q = I · t = 0,05 × 300 = 15 C</div></div></details></div>
+    <div class="ex" data-id="1-2"><p class="q"><b class="n">2.</b>Que corrente percorre uma resistência de 3 kΩ sujeita a 300 V?</p>
+      <div class="ain"><span class="in" data-ans="0.1" data-u="A">I =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>I = U / R = 300 / 3000 = 0,1 A</div></div></details></div>
+    <div class="ex" data-id="1-3"><p class="q"><b class="n">3.</b>Indique o valor e os limites de uma resistência castanho – preto – amarelo – dourado.</p>
+      <div class="ain"><span class="in" data-ans="100" data-u="kΩ">R =</span><span class="in" data-ans="95" data-u="kΩ">mín. =</span><span class="in" data-ans="105" data-u="kΩ">máx. =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>Castanho = 1; preto = 0; amarelo = × 10 000; dourado = ± 5 %</div><div>R = 10 × 10 000 = 100 kΩ ± 5 % → entre 95 kΩ e 105 kΩ</div></div></details></div>
+    <div class="ex" data-id="1-4"><p class="q"><b class="n">4.</b>Calcule a resistência equivalente de 100 Ω, 220 Ω e 330 Ω: a) em série; b) em paralelo.</p>
+      <div class="ain"><span class="in" data-ans="650" data-u="Ω">a) Req =</span><span class="in" data-ans="56.9" data-u="Ω">b) Req =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>a) Req = 100 + 220 + 330 = 650 Ω</div><div>b) 1/Req = 1/100 + 1/220 + 1/330 = 0,01758 → Req = 56,9 Ω</div></div></details></div>
+    <div class="ex" data-id="1-5"><p class="q"><b class="n">5.</b>Um aquecedor de 2 kW funciona a 230 V. Calcule a corrente, a resistência e a energia consumida em 3 h.</p>
+      <div class="ain"><span class="in" data-ans="8.70" data-u="A">I =</span><span class="in" data-ans="26.45" data-u="Ω">R =</span><span class="in" data-ans="6" data-u="kWh">W =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>I = P / U = 2000 / 230 = 8,70 A</div><div>R = U² / P = 230² / 2000 = 26,45 Ω</div><div>W = 2 kW × 3 h = 6 kWh</div></div></details></div>
+    <div class="ex" data-id="1-6"><p class="q"><b class="n">6.</b>Explique porque é que um amperímetro deve ter resistência interna muito baixa.</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Porque fica em série com o circuito: uma resistência elevada reduziria a corrente que se quer medir.</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 2 ====================== -->
+<section class="topic" id="cap-2" data-part="1" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 2 · Parte 1, slides 43–67</span>
+    <h2>Condensadores</h2>
+    <p class="lead">O condensador armazena carga elétrica e, com ela, energia no campo elétrico. É uma peça central da Parte 2: é com condensadores que se compensa o fator de potência.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">2.1</span>Constituição e aplicações</h3>
+    <p>O condensador é formado por duas placas condutoras, as armaduras, separadas por um isolante, o dielétrico (ar, papel, cerâmica, plástico, óxido de alumínio). Usa-se na filtragem de fontes de alimentação, no acoplamento de sinais, em temporizadores, no arranque de motores monofásicos e na compensação do fator de potência (<a href="#cap-10">capítulo 10</a>).</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">2.2</span>Tipos</h3>
+    <ul class="facts">
+      <li><b>Eletrolíticos:</b> capacidades elevadas; são polarizados – é obrigatório respeitar a polaridade e a tensão máxima marcadas (por exemplo, 4700 μF / 35 V).</li>
+      <li><b>Cerâmicos:</b> pequenos valores, em disco; usados em altas frequências.</li>
+      <li><b>De poliéster e de polipropileno:</b> não polarizados; os de polipropileno usam-se em CA (motores, compensação).</li>
+      <li><b>Variáveis e ajustáveis:</b> capacidade regulável, por exemplo na sintonia de rádio.</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">2.3</span>Capacidade</h3>
+    <p>A capacidade é a propriedade de o condensador armazenar carga. Representa-se por <b>C</b> e mede-se em <b>farad (F)</b>: um condensador de 1 F armazena 1 C por cada volt aplicado.</p>
+    <div class="formula"><span>C = Q / U</span><span>Q = C · U</span><span>C = ε · A / d</span></div>
+    <p>A capacidade aumenta com a área das armaduras (A) e com a permitividade do dielétrico (ε), e diminui com a distância entre armaduras (d). Como o farad é muito grande, usam-se submúltiplos: mF (10⁻³), μF (10⁻⁶), nF (10⁻⁹) e pF (10⁻¹²).</p>
+    <div class="note"><b>Código de 3 dígitos.</b> Nos condensadores cerâmicos, o código de 3 dígitos dá o valor em pF: dois algarismos e o número de zeros. Exemplos: 104 = 100 000 pF = 100 nF; 473 = 47 nF; 222 = 2,2 nF.</div>
+    <div class="panel tool" data-tool="codigo3"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">2.4</span>Energia armazenada</h3>
+    <div class="formula">W = ½ · C · U²</div>
+    <p>A energia cresce com o quadrado da tensão: duplicar U quadruplica W. É essa energia que um flash fotográfico liberta de uma só vez.</p>
+    <details class="worked"><summary>Exemplo resolvido 2.1 <span class="q">Que energia armazena um eletrolítico de 4700 μF carregado a 35 V?</span></summary>
+      <div class="steps"><div>W = ½ × 4700 × 10⁻⁶ × 35² = ½ × 0,0047 × 1225 ≈ 2,9 J</div></div></details>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">2.5</span>Carga e descarga</h3>
+    <p>Um condensador ligado a uma fonte através de uma resistência não carrega instantaneamente. A rapidez depende da constante de tempo <b>τ = R · C</b> (em segundos). Ao fim de τ, o condensador atinge 63 % da tensão final (na carga) ou desce a 37 % (na descarga); ao fim de 5τ considera-se completamente carregado ou descarregado.</p>
+    <div class="formula"><span>τ = R · C</span><span>carga: u = U·(1 − e<sup>−t/τ</sup>)</span><span>descarga: u = U·e<sup>−t/τ</sup></span></div>
+    <div class="note warn"><b>Atenção.</b> Em corrente contínua só há corrente enquanto o condensador carrega. Depois de carregado, I = 0: a corrente não atravessa o dielétrico.</div>
+    <div class="panel tool" data-tool="rc"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">2.6</span>Descarga em segurança</h3>
+    <p>Um condensador pode manter a carga muito depois de desligado. Antes de lhe mexer:</p>
+    <ol class="facts">
+      <li><b>Desligar e isolar:</b> desligar a alimentação e retirar a ficha.</li>
+      <li><b>Aguardar:</b> a resistência de descarga interna pode não existir ou estar avariada.</li>
+      <li><b>Medir</b> a tensão com o multímetro em V DC, numa escala acima da tensão nominal.</li>
+      <li><b>Descarregar por resistência</b>, com pontas isoladas, durante pelo menos 5τ.</li>
+      <li><b>Voltar a medir</b> e confirmar cerca de 0 V.</li>
+      <li>Se ficar guardado, <b>unir os terminais</b> com um fio, porque a tensão pode reaparecer (absorção dielétrica).</li>
+    </ol>
+    <div class="note danger"><b>Nunca com uma chave de fendas.</b> A energia liberta-se toda de uma vez, com faíscas, projeção de metal e risco de rebentamento. Fontes comutadas, micro-ondas, flashes, inversores e variadores têm condensadores com centenas ou milhares de volts e só devem ser manuseados por pessoal qualificado.</div>
+    <details class="worked"><summary>Exemplo resolvido 2.2 <span class="q">Escolha da resistência para descarregar um condensador de 4700 μF a 35 V com R = 100 Ω.</span></summary>
+      <div class="steps"><div>Corrente inicial: I0 = U / R = 35 / 100 = 0,35 A</div><div>Potência inicial: P0 = U² / R = 35² / 100 = 12 W (instantânea)</div><div>τ = R · C = 100 × 0,0047 = 0,47 s → descarga completa em 5τ ≈ 2,5 s</div></div></details>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">2.7</span>Associação de condensadores</h3>
+    <p>Em <b>série</b>, todos os condensadores ficam com a mesma carga Q (as armaduras interiores carregam-se por indução) e a tensão total divide-se: U = U1 + U2 + … Como U = Q / C, o condensador de menor capacidade fica com a maior tensão – é preciso verificar que esta não ultrapassa a sua tensão nominal.</p>
+    <p>Em <b>paralelo</b>, todos ficam sujeitos à mesma tensão e as cargas somam-se: QT = Q1 + Q2 + … Ligar em paralelo equivale a aumentar a área das armaduras. A tensão máxima do conjunto é a do condensador com menor tensão nominal.</p>
+    <div class="grid2">
+      <figure class="fig sm"><div class="pic"><img src="img/c-serie.webp" alt="Dois condensadores em série com uma fonte" loading="lazy"></div><figcaption>Figura 7 – Condensadores em série</figcaption></figure>
+      <figure class="fig sm"><div class="pic"><img src="img/c-paralelo.webp" alt="Três condensadores em paralelo com uma fonte" loading="lazy"></div><figcaption>Figura 8 – Condensadores em paralelo</figcaption></figure>
+    </div>
+    <div class="tcap">As fórmulas das capacidades trocam de lugar em relação às das resistências</div>
+    <div class="tbl"><table>
+      <thead><tr><th>Associação</th><th>Resistências</th><th>Condensadores</th></tr></thead>
+      <tbody>
+        <tr><td>Série</td><td class="m">RT = R1 + R2 + R3</td><td class="m">1/CT = 1/C1 + 1/C2 + 1/C3</td></tr>
+        <tr><td>Paralelo</td><td class="m">1/RT = 1/R1 + 1/R2 + 1/R3</td><td class="m">CT = C1 + C2 + C3</td></tr>
+      </tbody></table></div>
+    <details class="worked"><summary>Exemplo resolvido 2.3 – série <span class="q">C1 = 10 μF e C2 = 15 μF em série a 12 V. Calcule CT, Q, U1, U2 e a energia.</span></summary>
+      <div class="steps"><div>CT = 10 × 15 / (10 + 15) = 6 μF</div><div>Q = CT · U = 6 × 12 = 72 μC</div><div>U1 = 72 / 10 = 7,2 V; U2 = 72 / 15 = 4,8 V (verificação: 7,2 + 4,8 = 12 V)</div><div>W = ½ × 6 × 10⁻⁶ × 12² = 432 μJ</div></div></details>
+    <details class="worked"><summary>Exemplo resolvido 2.4 – paralelo <span class="q">2,2 μF, 4,7 μF e 10 μF em paralelo a 24 V. Calcule CT e as cargas.</span></summary>
+      <div class="steps"><div>CT = 2,2 + 4,7 + 10 = 16,9 μF</div><div>Q1 = 2,2 × 24 = 52,8 μC; Q2 = 4,7 × 24 = 112,8 μC; Q3 = 10 × 24 = 240 μC</div><div>QT = 405,6 μC (verificação: 16,9 × 24 = 405,6 μC)</div></div></details>
+    <details class="worked"><summary>Exemplo resolvido 2.5 – mista <span class="q">C2 = 4 μF e C3 = 8 μF em paralelo; o conjunto em série com C1 = 6 μF, a 18 V.</span></summary>
+      <div class="steps"><div>C23 = 4 + 8 = 12 μF; CT = 6 × 12 / 18 = 4 μF</div><div>Q = 4 × 18 = 72 μC (igual em C1 e em C23)</div><div>U1 = 72 / 6 = 12 V; U23 = 72 / 12 = 6 V</div><div>Q2 = 4 × 6 = 24 μC; Q3 = 8 × 6 = 48 μC</div></div></details>
+    <div class="panel tool" data-tool="assoc" data-kind="C"></div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="2-1"><p class="q"><b class="n">1.</b>Um condensador de 100 μF é ligado a 9 V. Calcule a carga e a energia armazenada.</p>
+      <div class="ain"><span class="in" data-ans="900" data-u="μC">Q =</span><span class="in" data-ans="4.05" data-u="mJ">W =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>Q = C · U = 100 μF × 9 V = 900 μC</div><div>W = ½ × 100 × 10⁻⁶ × 9² = 4,05 mJ</div></div></details></div>
+    <div class="ex" data-id="2-2"><p class="q"><b class="n">2.</b>Três condensadores de 12 μF em série estão ligados a 36 V. Calcule CT, Q e a tensão em cada um.</p>
+      <div class="ain"><span class="in" data-ans="4" data-u="μF">CT =</span><span class="in" data-ans="144" data-u="μC">Q =</span><span class="in" data-ans="12" data-u="V">U cada =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>CT = 12 / 3 = 4 μF</div><div>Q = 4 × 36 = 144 μC</div><div>U = 144 / 12 = 12 V em cada um</div></div></details></div>
+    <div class="ex" data-id="2-3"><p class="q"><b class="n">3.</b>Um condensador de 3 μF e outro de 6 μF estão em série sob 12 V. Qual fica com maior tensão? Calcule U1 e U2.</p>
+      <div class="ain"><span class="in" data-ans="8" data-u="V">U1 (3 μF) =</span><span class="in" data-ans="4" data-u="V">U2 (6 μF) =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>CT = 3 × 6 / 9 = 2 μF; Q = 2 × 12 = 24 μC</div><div>U1 = 24 / 3 = 8 V; U2 = 24 / 6 = 4 V</div><div class="c">O de 3 μF (menor C) fica com a maior tensão.</div></div></details></div>
+    <div class="ex" data-id="2-4"><p class="q"><b class="n">4.</b>Condensadores de 1 μF, 2,2 μF e 4,7 μF em paralelo a 10 V. Calcule CT e a carga total.</p>
+      <div class="ain"><span class="in" data-ans="7.9" data-u="μF">CT =</span><span class="in" data-ans="79" data-u="μC">QT =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>CT = 1 + 2,2 + 4,7 = 7,9 μF</div><div>QT = 7,9 × 10 = 79 μC</div></div></details></div>
+    <div class="ex" data-id="2-5"><p class="q"><b class="n">5.</b>Um condensador cerâmico tem o código 473. Qual é a sua capacidade em nF?</p>
+      <div class="ain"><span class="in" data-ans="47" data-u="nF">C =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>473 = 47 × 10³ pF = 47 000 pF = 47 nF</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 3 ====================== -->
+<section class="topic" id="cap-3" data-part="1" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 3 · Parte 1, slides 68–91 · Parte 2, slides 4–15</span>
+    <h2>Magnetismo e eletromagnetismo</h2>
+    <p class="lead">Ímanes, campos magnéticos e a ligação entre corrente e magnetismo: a base dos motores, relés, transformadores e bobines.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.1</span>Ímanes e polos magnéticos</h3>
+    <p>Um íman atrai objetos de ferro e aço. Os ímanes naturais são fragmentos de magnetite, um minério abundante na região da Magnésia, na Grécia (daí o nome). Os ímanes artificiais obtêm-se magnetizando materiais ferromagnéticos: ferro, níquel, cobalto e algumas ligas. Papel, vidro, plástico e metais como o alumínio, o cobre, a prata e o ouro não são atraídos.</p>
+    <ul class="facts">
+      <li>Um íman tem dois polos, norte (N) e sul (S), onde a atração é mais intensa.</li>
+      <li>Polos do mesmo nome repelem-se; polos de nomes diferentes atraem-se.</li>
+      <li>Inseparabilidade dos polos: cortando um íman ao meio obtêm-se dois ímanes completos.</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.2</span>Magnetização</h3>
+    <p>Num material ferromagnético não magnetizado, os pequenos domínios magnéticos estão orientados ao acaso e os seus efeitos anulam-se. Aproximando um íman potente (ou fazendo passar corrente numa bobina à sua volta), os domínios orientam-se e o material passa a comportar-se como um íman: é a magnetização. Acima de uma certa temperatura, o ponto de Curie, o material perde as propriedades magnéticas.</p>
+    <figure class="fig"><div class="pic"><img src="img/dominios.webp" alt="Domínios magnéticos desordenados e depois todos orientados" loading="lazy"></div><figcaption>Figura 9 – Domínios magnéticos antes e depois da magnetização</figcaption></figure>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.3</span>Campo magnético</h3>
+    <div class="grid2">
+      <p>O campo magnético é a região à volta de um íman, de um condutor percorrido por corrente ou de cargas em movimento, onde se manifestam forças magnéticas. É uma grandeza vetorial, representada por <b>B</b> (indução magnética) e medida em <b>tesla (T)</b>. Representa-se por linhas de força: linhas fechadas que, no exterior do íman, saem do polo norte e entram no polo sul. Onde as linhas estão mais juntas, o campo é mais intenso.</p>
+      <figure class="fig sm"><div class="pic"><img src="img/iman-linhas.webp" alt="Linhas de força em volta de um íman em barra" loading="lazy"></div><figcaption>Figura 10 – Linhas de força do campo de um íman em barra</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.4</span>Grandezas vetoriais</h3>
+    <div class="grid2">
+      <p>Uma grandeza escalar fica definida por um número e uma unidade (massa, tempo, energia, resistência). Uma grandeza vetorial precisa também de direção e sentido (força, velocidade, campo magnético). Os vetores somam-se pela regra do paralelogramo: só se tiverem a mesma direção e sentido é que o módulo da soma é a soma dos módulos. Esta regra será usada nos diagramas vetoriais de corrente alternada.</p>
+      <figure class="fig sm"><div class="pic"><img src="img/vetores.webp" alt="Soma de dois vetores a e b pela regra do paralelogramo" loading="lazy"></div><figcaption>Figura 11 – Soma de dois vetores pela regra do paralelogramo</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.5</span>Força de Lorentz</h3>
+    <p>Uma partícula com carga q que se move com velocidade v num campo B fica sujeita a uma força perpendicular a v e a B. θ é o ângulo entre v e B. A força é máxima quando a partícula se move perpendicularmente ao campo e nula quando se move ao longo dele. Está na base do funcionamento dos motores e dos altifalantes.</p>
+    <div class="formula">F = |q| · v · B · sen θ</div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.6</span>Experiência de Ørsted e campo de um condutor</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>Em 1820, Hans Christian Ørsted observou que uma corrente num fio desviava a agulha de uma bússola: a corrente elétrica cria um campo magnético. À volta de um condutor retilíneo, as linhas de força são circunferências em planos perpendiculares ao fio. O sentido dá-se pela <b>regra da mão direita</b>: com o polegar no sentido da corrente, os dedos fechados indicam o sentido das linhas.</p>
+        <div class="formula"><span>B = μ0 · I / (2π · r)</span><span>μ0 = 4π × 10⁻⁷ H/m</span><small>r é a distância ao fio. A uma distância dupla, o campo é metade.</small></div>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/condutor-retilineo.webp" alt="Linhas circulares em volta de um condutor com a corrente a sair da página" loading="lazy"></div><figcaption>Figura 12 – Campo magnético de um condutor retilíneo (corrente a sair da página)</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.7</span>Espira, solenoide e eletroíman</h3>
+    <div class="grid2">
+      <div class="sec">
+        <div class="formula"><span>Espira (centro): B = μ0 · I / (2r)</span><span>Solenoide: B = μ0 · N · I / ℓ</span></div>
+        <p>Um solenoide é uma bobina longa de N espiras e comprimento ℓ. No seu interior o campo é praticamente uniforme e o solenoide comporta-se como um íman com polos N e S. Com um núcleo de ferro, o campo aumenta centenas de vezes: obtém-se um eletroíman, cuja grande vantagem é poder ser ligado, desligado e regulado através da corrente (relés, contactores, gruas magnéticas, fechaduras elétricas).</p>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/solenoide.webp" alt="Corte de um solenoide com o campo uniforme no interior" loading="lazy"></div><figcaption>Figura 13 – Campo no interior de um solenoide</figcaption></figure>
+    </div>
+    <details class="worked"><summary>Exemplo resolvido 3.1 <span class="q">a) Fio com I = 10 A: B a 2 cm? b) Espira com r = 5 cm e I = 5 A? c) Solenoide com 500 espiras, ℓ = 25 cm, I = 2 A?</span></summary>
+      <div class="steps"><div>a) B = 4π × 10⁻⁷ × 10 / (2π × 0,02) = 100 μT</div><div>b) B = 4π × 10⁻⁷ × 5 / (2 × 0,05) = 62,8 μT</div><div>c) B = 4π × 10⁻⁷ × 500 × 2 / 0,25 = 5,03 mT</div><div class="c">Para comparação, o campo magnético terrestre é de cerca de 50 μT.</div></div></details>
+    <div class="panel tool" data-tool="campoB"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.8</span>Lei de Laplace</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>Um condutor de comprimento ℓ, percorrido por uma corrente I num campo B, fica sujeito a uma força – a soma das forças de Lorentz sobre os eletrões que nele se movem. θ é o ângulo entre o condutor e o campo. O sentido dá-se pela <b>regra da mão esquerda</b>: indicador no sentido de B, dedo médio no sentido de I, e o polegar indica F.</p>
+        <div class="formula">F = B · I · ℓ · sen θ</div>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/laplace.webp" alt="Condutor num campo a entrar na página, com a força para cima" loading="lazy"></div><figcaption>Figura 14 – Força sobre um condutor percorrido por corrente num campo magnético</figcaption></figure>
+    </div>
+    <details class="worked"><summary>Exemplo resolvido 3.2 <span class="q">Condutor de 0,2 m, I = 8 A, num campo de 0,5 T. Calcule a força a 90° e a 30°.</span></summary>
+      <div class="steps"><div>A 90°: F = 0,5 × 8 × 0,2 × 1 = 0,8 N</div><div>A 30°: F = 0,8 × sen 30° = 0,4 N</div></div></details>
+    <div class="panel tool" data-tool="laplace"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.9</span>Espira num campo: o princípio do motor</h3>
+    <div class="grid2">
+      <p>Numa espira percorrida por corrente dentro de um campo magnético, os dois lados ativos têm correntes de sentidos opostos. As forças de Laplace também têm sentidos opostos e formam um binário que faz rodar a espira. O binário é máximo com o plano da espira paralelo ao campo e nulo quando é perpendicular. Para manter a rotação, um coletor inverte a corrente a cada meia volta: é o princípio do motor elétrico.</p>
+      <figure class="fig sm"><div class="pic"><img src="img/espira-binario.webp" alt="Espira entre os polos N e S com forças opostas nos lados" loading="lazy"></div><figcaption>Figura 15 – Binário sobre uma espira num campo magnético</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.10</span>Curva de magnetização</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>A corrente numa bobina cria uma intensidade de campo <b>H = N · I / ℓ</b> (em A/m). A indução que se obtém no material é <b>B = μ · H</b>, onde μ = μ0 · μr é a permeabilidade. Os materiais ferromagnéticos têm permeabilidade relativa μr de centenas a milhares.</p>
+        <p>A curva de magnetização (B em função de H) mostra uma zona quase linear, em que B cresce proporcionalmente a H, e uma zona de saturação, em que todos os domínios já estão orientados e B quase não aumenta. Bobinas e transformadores são dimensionados para trabalhar abaixo do «joelho» da curva.</p>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/curva-magnetizacao.webp" alt="Curva B-H com zona linear e zona de saturação" loading="lazy"></div><figcaption>Figura 16 – Curva de magnetização de um material ferromagnético</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.11</span>Histerese magnética</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>Se H variar num ciclo completo (como acontece em corrente alternada), B não segue o mesmo caminho à ida e à volta: é a histerese. O ciclo tem dois pontos característicos: a <b>remanência Br</b> (magnetismo que fica quando H = 0) e o <b>campo coercivo Hc</b> (campo necessário para anular B).</p>
+        <p>A área do ciclo é a energia transformada em calor em cada ciclo. A 50 Hz, o ciclo repete-se 50 vezes por segundo, por isso os núcleos de transformadores e motores usam materiais de ciclo estreito (ferro macio, aço-silício). Os ímanes permanentes usam materiais de ciclo largo.</p>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/histerese.webp" alt="Ciclo de histerese com remanência e campo coercivo assinalados" loading="lazy"></div><figcaption>Figura 17 – Ciclo de histerese</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">3.12</span>Correntes de Foucault</h3>
+    <p>Um fluxo magnético variável induz correntes em circuito fechado dentro do próprio núcleo metálico: as correntes de Foucault. Aquecem o núcleo e provocam perdas em transformadores, motores e bobinas. Reduzem-se fazendo o núcleo de chapas finas isoladas (laminado), de aço-silício (maior resistividade) ou de ferrite. Têm também aplicações úteis: placas de indução, fornos de indução, travões magnéticos e detetores de metais.</p>
+    <figure class="fig"><div class="pic"><img src="img/foucault.webp" alt="Núcleo maciço com grandes correntes e núcleo laminado com correntes pequenas" loading="lazy"></div><figcaption>Figura 18 – Núcleo maciço e núcleo laminado</figcaption></figure>
+    <div class="note"><b>Em resumo.</b> Perdas no ferro = perdas por histerese + perdas por correntes de Foucault. Ambas aumentam com a frequência.</div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="3-1"><p class="q"><b class="n">1.</b>Um condutor retilíneo é percorrido por 20 A. Calcule B a 5 cm do condutor.</p>
+      <div class="ain"><span class="in" data-ans="80" data-u="μT">B =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>B = 4π × 10⁻⁷ × 20 / (2π × 0,05) = 80 μT</div></div></details></div>
+    <div class="ex" data-id="3-2"><p class="q"><b class="n">2.</b>Um solenoide tem 1000 espiras, 40 cm de comprimento e é percorrido por 0,5 A. Calcule B no interior.</p>
+      <div class="ain"><span class="in" data-ans="1.57" data-u="mT">B =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>B = 4π × 10⁻⁷ × 1000 × 0,5 / 0,4 = 1,57 mT</div></div></details></div>
+    <div class="ex" data-id="3-3"><p class="q"><b class="n">3.</b>Um condutor de 30 cm, percorrido por 5 A, está perpendicular a um campo de 1,2 T. Calcule a força.</p>
+      <div class="ain"><span class="in" data-ans="1.8" data-u="N">F =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>F = 1,2 × 5 × 0,3 × sen 90° = 1,8 N</div></div></details></div>
+    <div class="ex" data-id="3-4"><p class="q"><b class="n">4.</b>Explique porque é que os núcleos dos transformadores são feitos de chapas isoladas.</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">As chapas isoladas cortam o caminho das correntes de Foucault, que ficam muito menores; reduzem-se as perdas e o aquecimento.</div></div></details></div>
+    <div class="ex" data-id="3-5"><p class="q"><b class="n">5.</b>Num ciclo de histerese, o que representam Br e Hc? Que tipo de ciclo convém a um transformador?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Br: indução que fica com H = 0. Hc: campo necessário para anular B. Um transformador precisa de ciclo estreito (poucas perdas).</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 4 ====================== -->
+<section class="topic" id="cap-4" data-part="1" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 4 · Parte 1, slides 92–109</span>
+    <h2>Indução eletromagnética</h2>
+    <p class="lead">Se a corrente cria um campo magnético, poderá um campo magnético criar corrente? Michael Faraday respondeu que sim em 1831 (Joseph Henry chegou a resultados semelhantes nos EUA). A indução está na base dos geradores e dos transformadores.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">4.1</span>A experiência de Faraday</h3>
+    <p>Ligando uma bobina a um galvanómetro (aparelho que deteta correntes muito pequenas e o seu sentido) e movendo um íman junto dela, surge corrente. Só há corrente enquanto o íman se move em relação à bobina: com o íman parado, por mais forte que seja, o galvanómetro marca zero. O sentido da corrente depende do sentido do movimento.</p>
+    <figure class="fig"><div class="pic"><img src="img/faraday.webp" alt="Íman parado, a aproximar-se e a afastar-se de uma bobina com galvanómetro" loading="lazy"></div><figcaption>Figura 19 – Experiência de Faraday: só há corrente enquanto o íman se move</figcaption></figure>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">4.2</span>Fluxo magnético</h3>
+    <div class="formula">Φ = B · A · cos θ<small>Φ em weber (Wb); A é a área da espira (m²) e θ o ângulo entre B e a normal à espira.</small></div>
+    <p>O fluxo magnético Φ mede «quantas linhas de campo» atravessam uma espira. É máximo com a espira perpendicular ao campo (θ = 0°) e nulo com a espira paralela (θ = 90°).</p>
+    <figure class="fig"><div class="pic"><img src="img/fluxo-angulos.webp" alt="Espira com o campo a 0, 60 e 90 graus" loading="lazy"></div><figcaption>Figura 20 – Fluxo através de uma espira para θ = 0°, 60° e 90°</figcaption></figure>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">4.3</span>Quando há indução</h3>
+    <p>Há indução sempre que o fluxo magnético através do circuito <b>varia</b>. Isso acontece ao mover o íman ou a bobina, ao rodar a espira no campo (gerador), ao variar a área do circuito ou ao variar a corrente numa bobina vizinha, mesmo sem qualquer movimento (transformador). Com o circuito fechado surge uma corrente induzida; com o circuito aberto há apenas uma f.e.m. (tensão) induzida.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">4.4</span>Lei de Faraday</h3>
+    <div class="formula"><span>ε = − N · ΔΦ / Δt</span><span>I = ε / R</span></div>
+    <p>ε é a f.e.m. induzida (V), N o número de espiras, ΔΦ a variação de fluxo (Wb) e Δt o intervalo de tempo (s). A f.e.m. é tanto maior quanto mais intenso for o campo, mais rápida a variação, maior o número de espiras e maior a área. Cada espira contribui com a sua f.e.m. e as f.e.m. somam-se: daí o fator N. Um núcleo de ferro concentra as linhas e aumenta o fluxo.</p>
+    <details class="worked"><summary>Exemplo resolvido 4.1 <span class="q">Numa bobina com 200 espiras, o fluxo passa de 0,002 Wb para 0,008 Wb em 0,1 s. Calcule a f.e.m. e a corrente, se R = 4 Ω.</span></summary>
+      <div class="steps"><div>|ε| = 200 × (0,008 − 0,002) / 0,1 = 200 × 0,06 = 12 V</div><div>I = 12 / 4 = 3 A</div></div></details>
+    <div class="panel tool" data-tool="faraday"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">4.5</span>Lei de Lenz</h3>
+    <p>O sentido da corrente induzida é tal que o campo magnético que ela cria se opõe à variação do fluxo que a originou. Ao aproximar o polo norte de um íman, a bobina cria um polo norte na face voltada para ele (repulsão); ao afastá-lo, cria um polo sul (atração). Por isso é preciso fazer força para mover o íman: a energia elétrica obtida vem do trabalho realizado. É esta oposição que o sinal − exprime na lei de Faraday.</p>
+    <figure class="fig"><div class="pic"><img src="img/lenz.webp" alt="A bobina cria um polo N quando o íman se aproxima e um polo S quando se afasta" loading="lazy"></div><figcaption>Figura 21 – Lei de Lenz: a bobina opõe-se à aproximação e ao afastamento do íman</figcaption></figure>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">4.6</span>Aplicações</h3>
+    <div class="grid2">
+      <div class="sec">
+        <h4>O gerador (alternador)</h4>
+        <p>Uma espira ou bobina roda entre os polos de um íman. O ângulo θ muda continuamente, o fluxo varia e é induzida uma f.e.m. A cada meia volta o sentido inverte-se: obtém-se corrente alternada. O gerador converte energia mecânica em energia elétrica (alternador do automóvel, dínamo de bicicleta, centrais hidroelétricas e eólicas). O estudo detalhado está no <a href="#cap-6">capítulo 6</a>.</p>
+        <figure class="fig sm"><div class="pic"><img src="img/gerador.webp" alt="Espira a rodar entre os polos N e S, ligada a uma lâmpada" loading="lazy"></div><figcaption>Figura 22 – Gerador elementar</figcaption></figure>
+      </div>
+      <div class="sec">
+        <h4>O transformador</h4>
+        <p>A corrente alternada no primário cria um fluxo variável no núcleo de ferro. Esse fluxo atravessa o secundário e induz aí uma tensão, sem qualquer movimento. Com corrente contínua não funciona: sem variação de fluxo não há indução.</p>
+        <div class="formula">Us / Up = Ns / Np</div>
+        <p>Se Ns &gt; Np, a tensão é elevada (transporte de energia); se Ns &lt; Np, é reduzida (por exemplo, de 230 V para 12 V).</p>
+        <figure class="fig sm"><div class="pic"><img src="img/transformador.webp" alt="Núcleo de ferro com enrolamento primário e secundário" loading="lazy"></div><figcaption>Figura 23 – Princípio do transformador</figcaption></figure>
+      </div>
+    </div>
+    <div class="panel tool" data-tool="trafo"></div>
+    <h4>Outras aplicações</h4>
+    <ul class="facts">
+      <li><b>Placa de indução:</b> as correntes induzidas no fundo do tacho aquecem-no.</li>
+      <li><b>Carregador sem fios:</b> a bobina da base induz corrente na bobina do telemóvel.</li>
+      <li><b>Travões magnéticos:</b> correntes induzidas num disco travam comboios e camiões.</li>
+      <li><b>Detetor de metais:</b> o metal altera as correntes induzidas na bobina.</li>
+      <li><b>Guitarra elétrica:</b> a corda vibra junto a um captador (íman e bobina) e induz um sinal.</li>
+      <li><b>Cartões sem contacto:</b> o leitor induz energia na antena do cartão.</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">4.7</span>Motor ou gerador?</h3>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Gerador</th><th>Motor</th></tr></thead>
+      <tbody>
+        <tr><td>Princípio</td><td>Indução (Faraday)</td><td>Força eletromagnética (Laplace)</td></tr>
+        <tr><td>Conversão</td><td>Energia mecânica → elétrica</td><td>Energia elétrica → mecânica</td></tr>
+        <tr><td>Como funciona</td><td>O movimento num campo faz variar o fluxo e induz corrente</td><td>Uma corrente num campo sofre uma força e entra em movimento</td></tr>
+        <tr><td>Exemplos</td><td>Dínamo, alternador, central eólica</td><td>Ventoinha, berbequim, comboio elétrico</td></tr>
+      </tbody></table></div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="4-1"><p class="q"><b class="n">1.</b>Um íman está em repouso dentro de uma bobina ligada a um galvanómetro. Há corrente? Justifique.</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Não: com o íman parado o fluxo não varia, não há f.e.m. induzida nem corrente.</div></div></details></div>
+    <div class="ex" data-id="4-2"><p class="q"><b class="n">2.</b>Uma espira com 0,02 m² está num campo de 0,5 T. Calcule o fluxo para um ângulo entre B e a normal de 0° e de 60°.</p>
+      <div class="ain"><span class="in" data-ans="0.01" data-u="Wb">Φ (0°) =</span><span class="in" data-ans="0.005" data-u="Wb">Φ (60°) =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>0°: Φ = 0,5 × 0,02 × cos 0° = 0,01 Wb</div><div>60°: Φ = 0,5 × 0,02 × cos 60° = 0,005 Wb</div></div></details></div>
+    <div class="ex" data-id="4-3"><p class="q"><b class="n">3.</b>Numa bobina de 500 espiras, o fluxo varia 0,004 Wb em 0,05 s. Calcule a f.e.m. e a corrente, sabendo que R = 10 Ω.</p>
+      <div class="ain"><span class="in" data-ans="40" data-u="V">|ε| =</span><span class="in" data-ans="4" data-u="A">I =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>|ε| = 500 × 0,004 / 0,05 = 40 V</div><div>I = 40 / 10 = 4 A</div></div></details></div>
+    <div class="ex" data-id="4-4"><p class="q"><b class="n">4.</b>Aproxima-se o polo S de um íman de uma bobina. Que polo surge na face voltada para o íman? Há atração ou repulsão?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Surge um polo S, que se opõe à aproximação: há repulsão.</div></div></details></div>
+    <div class="ex" data-id="4-5"><p class="q"><b class="n">5.</b>Porque é que um transformador não funciona com corrente contínua?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Com CC o fluxo no núcleo é constante; sem variação não há tensão induzida no secundário (só nos instantes de ligar e desligar).</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 5 ====================== -->
+<section class="topic" id="cap-5" data-part="1" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 5 · Parte 1, slides 110–132</span>
+    <h2>Indutores (bobines)</h2>
+    <p class="lead">A bobina armazena energia no campo magnético e opõe-se às variações da corrente. Em CC estabelecida é quase um fio; em CA vai ter uma reatância que cresce com a frequência.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">5.1</span>O que é um indutor</h3>
+    <div class="grid2">
+      <p>Um indutor ou bobina é um componente passivo formado por um fio enrolado, com núcleo de ar, ferro ou ferrite, que armazena energia no campo magnético quando é percorrido por corrente. Também se designa por «choke».</p>
+      <figure class="fig sm"><div class="pic"><img src="img/indutores.webp" alt="Fotografias de bobines com núcleo de ferro, ferrite, ar, toroidal e laminado" loading="lazy"></div><figcaption>Figura 24 – Indutores com diferentes tipos de núcleo</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">5.2</span>Autoindução e indutância</h3>
+    <p>Quando a corrente numa bobina varia, o campo magnético que ela cria também varia e induz na própria bobina uma f.e.m. que, pela lei de Lenz, se opõe a essa variação. É a <b>autoindução</b>. A bobina funciona como um «travão» às variações da corrente – não à corrente em si: em corrente contínua estabelecida comporta-se como um simples fio, com a resistência do cobre.</p>
+    <div class="formula"><span>e = − L · ΔI / Δt</span><span>W = ½ · L · I²</span></div>
+    <p>A propriedade de se opor às variações da corrente chama-se <b>indutância (L)</b> e mede-se em <b>henry (H)</b>, em homenagem a Joseph Henry. Como o henry é uma unidade grande para a eletrónica, usam-se o milihenry (mH) e o microhenry (μH). A segunda fórmula dá a energia armazenada no campo magnético.</p>
+    <div class="panel tool" data-tool="autoinducao"></div>
+    <p class="mono" style="font-size:.85rem">Simulação de apoio dos slides: <a href="https://www.tinkercad.com/things/0BYL7wjANps-simple-inductor-circuit">circuito simples com indutor (Tinkercad)</a></p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">5.3</span>Tipos de núcleo</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Núcleo</th><th>Características</th><th>Aplicação típica</th></tr></thead>
+      <tbody>
+        <tr><td>Ar</td><td>Sem material ferromagnético; baixa indutância; sem perdas no núcleo</td><td>Alta frequência (rádio)</td></tr>
+        <tr><td>Ferromagnético</td><td>Concentra o campo e aumenta L; tem perdas (histerese e Foucault) que crescem com f</td><td>Quando é preciso indutância elevada</td></tr>
+        <tr><td>Laminado (aço-silício)</td><td>Chapas isoladas com verniz reduzem as correntes de Foucault</td><td>Baixa frequência (50 Hz): transformadores, bobinas de potência</td></tr>
+        <tr><td>Ferrite</td><td>Cerâmico ferromagnético de resistividade elevada: perdas muito baixas</td><td>Alta frequência: fontes comutadas, filtros</td></tr>
+        <tr><td>Toroidal</td><td>Forma de anel; o campo fecha-se no núcleo, com pouca dispersão</td><td>Fontes de alimentação e filtros em CA</td></tr>
+      </tbody></table></div>
+    <p>Os indutores usam-se em solenoides, relés, transformadores, sensores indutivos, filtros e fontes de alimentação.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">5.4</span>Associação de bobines</h3>
+    <p>Desde que não haja acoplamento magnético entre as bobines, associam-se como as resistências:</p>
+    <div class="grid2">
+      <figure class="fig sm"><div class="pic"><img src="img/l-serie.webp" alt="Três bobines em série" loading="lazy"></div><figcaption>Figura 25 – Bobines em série (a corrente é a mesma)</figcaption></figure>
+      <figure class="fig sm"><div class="pic"><img src="img/l-paralelo.webp" alt="Três bobines em paralelo" loading="lazy"></div><figcaption>Figura 26 – Bobines em paralelo (a tensão é a mesma)</figcaption></figure>
+    </div>
+    <div class="formula"><span>Série: Leq = L1 + L2 + … + Ln</span><span>Paralelo: 1/Leq = 1/L1 + 1/L2 + … + 1/Ln</span></div>
+    <details class="worked"><summary>Exemplo resolvido 5.1 <span class="q">a) Três bobines de 400 μH em série. b) Três bobines de 300 μH em paralelo. c) 10 mH em paralelo com 15 mH.</span></summary>
+      <div class="steps"><div>a) Leq = 3 × 400 = 1200 μH = 1,2 mH</div><div>b) Leq = 300 / 3 = 100 μH</div><div>c) Leq = 10 × 15 / (10 + 15) = 6 mH</div></div></details>
+    <div class="panel tool" data-tool="assoc" data-kind="L"></div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="5-1"><p class="q"><b class="n">1.</b>Duas bobines de 20 mH e 30 mH estão em série. Qual é a indutância equivalente? E em paralelo?</p>
+      <div class="ain"><span class="in" data-ans="50" data-u="mH">série =</span><span class="in" data-ans="12" data-u="mH">paralelo =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>Série: 20 + 30 = 50 mH</div><div>Paralelo: 20 × 30 / 50 = 12 mH</div></div></details></div>
+    <div class="ex" data-id="5-2"><p class="q"><b class="n">2.</b>Explique porque é que uma bobina não se opõe à corrente contínua estabelecida.</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Com corrente constante não há variação de fluxo nem f.e.m. de autoindução; só a resistência do fio limita a corrente.</div></div></details></div>
+    <div class="ex" data-id="5-3"><p class="q"><b class="n">3.</b>Porque é que os núcleos de ferrite se usam em alta frequência e os laminados em 50 Hz?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">A ferrite tem resistividade elevada e perdas muito baixas em alta frequência; o núcleo laminado tem indutância elevada e perdas aceitáveis a 50 Hz.</div></div></details></div>
+    <div class="ex" data-id="5-4"><p class="q"><b class="n">4.</b>Uma bobina de 0,5 H é percorrida por 2 A. Que energia armazena no campo magnético?</p>
+      <div class="ain"><span class="in" data-ans="1" data-u="J">W =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>W = ½ · L · I² = ½ × 0,5 × 2² = 1 J</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== TESTE PARTE 1 ====================== -->
+<section class="topic" id="teste-1" data-part="1" hidden>
+  <div class="chap-head">
+    <span class="kicker">Parte 1 · Autoavaliação</span>
+    <h2>Teste rápido – Corrente contínua</h2>
+    <p class="lead">Doze perguntas sobre os capítulos 1 a 5. Escolha uma opção: vê logo se acertou e porquê. A pontuação fica neste dispositivo.</p>
+  </div>
+  <div class="quiz" data-quiz="1"></div>
+</section>
+
+<!-- ====================== CAPÍTULO 6 ====================== -->
+<section class="topic" id="cap-6" data-part="2" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 6 · Parte 2, slides 16–34</span>
+    <h2>Corrente alternada sinusoidal</h2>
+    <p class="lead">A corrente da rede muda de sentido 100 vezes por segundo. Este capítulo define as grandezas que a descrevem e mostra como se medem no osciloscópio.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">6.1</span>Porquê corrente alternada</h3>
+    <p>Em 1832, Hippolyte Pixii construiu o primeiro gerador de corrente alternada, aplicando a indução de Faraday. Nos anos 1880 travou-se a «guerra das correntes»: Edison defendia a corrente contínua; Westinghouse e Tesla, o sistema polifásico de corrente alternada. Em 1895–1896, a central das cataratas do Niágara passou a alimentar a cidade de Buffalo, a cerca de 40 km, em CA.</p>
+    <p>A corrente alternada venceu porque a sua tensão se eleva e baixa facilmente com transformadores. Como as perdas nas linhas são P = R · I², transportar a mesma potência a uma tensão mais alta exige menos corrente e perde-se muito menos energia.</p>
+    <div class="tcap">Efeito da tensão de transporte nas perdas</div>
+    <div class="tbl"><table>
+      <thead><tr><th>Para transportar 100 kW</th><th>Corrente (I = P / U)</th><th>Perdas numa linha de 1 Ω</th></tr></thead>
+      <tbody>
+        <tr><td>a 100 V</td><td class="m">1000 A</td><td class="m">1 × 1000² = 1 000 000 W (impossível)</td></tr>
+        <tr><td>a 100 kV</td><td class="m">1 A</td><td class="m">1 × 1² = 1 W</td></tr>
+      </tbody></table></div>
+    <p>Em Portugal, a rede de distribuição é de <b>230 V / 400 V e 50 Hz</b>.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">6.2</span>Corrente contínua, alternada e formas de onda</h3>
+    <p>Na corrente contínua o sentido e o valor são constantes (pilhas, baterias, painéis fotovoltaicos, fontes retificadas). Na corrente alternada o sentido muda periodicamente: a 50 Hz, a corrente inverte o sentido 100 vezes por segundo. A forma de onda da rede é sinusoidal, a que um alternador produz naturalmente; em eletrónica encontram-se também ondas quadradas, triangulares e em dente de serra.</p>
+    <div class="grid2">
+      <figure class="fig sm"><div class="pic"><img src="img/cc-ca.webp" alt="Gráfico de corrente contínua constante e de corrente alternada sinusoidal" loading="lazy"></div><figcaption>Figura 27 – Corrente contínua e corrente alternada</figcaption></figure>
+      <figure class="fig sm"><div class="pic"><img src="img/formas-onda.webp" alt="Ondas sinusoidal, quadrada, triangular e dente de serra" loading="lazy"></div><figcaption>Figura 28 – Formas de onda periódicas</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">6.3</span>Produção: o alternador</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>No alternador elementar, uma espira (o induzido) roda com velocidade angular ω num campo magnético. As extremidades estão ligadas a dois anéis coletores, em contacto com escovas de grafite que levam a corrente ao circuito exterior. O fluxo através da espira varia continuamente, Φ = B · A · cos(ωt), e pela lei de Faraday surge uma f.e.m. sinusoidal:</p>
+        <div class="formula"><span>e = Emáx · sen(ωt)</span><span>Emáx = N · B · A · ω</span></div>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/alternador.webp" alt="Espira a rodar entre polos N e S com anéis coletores, escovas e galvanómetro" loading="lazy"></div><figcaption>Figura 29 – Alternador elementar com anéis coletores e escovas</figcaption></figure>
+    </div>
+    <p>A f.e.m. não depende de quanto fluxo atravessa a espira, mas de <b>quão depressa ele varia</b>. A 0° (plano da espira perpendicular ao campo) o fluxo é máximo mas está a variar pouco: e = 0. A 90° (plano paralelo ao campo) o fluxo é nulo mas varia mais depressa: e é máxima. Entre 180° e 360° repete-se com sentido contrário. Uma volta completa corresponde a um ciclo.</p>
+    <div class="panel tool" data-tool="alternador"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">6.4</span>Período, frequência e pulsação</h3>
+    <div class="formula"><span>f = 1 / T</span><span>ω = 2π · f</span></div>
+    <ul class="facts">
+      <li><b>Período (T):</b> tempo de um ciclo completo, em segundos (s).</li>
+      <li><b>Frequência (f):</b> número de ciclos por segundo, em hertz (Hz).</li>
+      <li><b>Pulsação ou velocidade angular (ω):</b> em radianos por segundo (rad/s).</li>
+      <li>Rede europeia: f = 50 Hz → T = 20 ms e ω = 314 rad/s. Nas Américas usa-se muitas vezes 60 Hz.</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">6.5</span>Amplitude e valor instantâneo</h3>
+    <div class="formula">u = Umáx · sen(ωt + φ)<small>u é o valor instantâneo num momento t; Umáx é a amplitude ou valor de pico; Upp = 2 · Umáx é o valor pico a pico; φ é a fase na origem (t = 0).</small></div>
+    <figure class="fig"><div class="pic"><img src="img/sinusoide.webp" alt="Sinusoide com amplitude, valor pico a pico e período assinalados" loading="lazy"></div><figcaption>Figura 31 – Grandezas de uma sinusoide</figcaption></figure>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">6.6</span>Valor médio e valor eficaz</h3>
+    <p>Num período completo, o valor médio de uma sinusoide é zero (as duas alternâncias anulam-se). Por isso calcula-se numa alternância (meio período); é o valor que interessa na retificação.</p>
+    <p>O <b>valor eficaz</b> (r.m.s.) é o valor de uma corrente contínua que produziria o mesmo calor na mesma resistência. Os valores indicados nos aparelhos e na rede (230 V, 5 A) são sempre valores eficazes, e é o que medem os multímetros.</p>
+    <div class="formula"><span>Uméd = (2/π) · Umáx ≈ 0,637 · Umáx</span><span>U = Umáx / √2 ≈ 0,707 · Umáx</span><small>O valor médio é calculado numa alternância.</small></div>
+    <div class="note warn"><b>Atenção.</b> A relação U = Umáx/√2 só vale para a sinusoide. Numa onda quadrada U = Umáx; numa triangular U = Umáx/√3. Um multímetro que não seja «True RMS» dá leituras erradas em ondas não sinusoidais.</div>
+    <details class="worked"><summary>Exemplo resolvido 6.1 <span class="q">Rede de 230 V (eficaz) e 50 Hz: período, amplitude, pico a pico, valor médio e valor em t = 2,5 ms.</span></summary>
+      <div class="steps"><div>a) T = 1 / 50 = 20 ms</div><div>b) Umáx = √2 × 230 = 325,3 V</div><div>c) Upp = 2 × 325,3 = 650,5 V</div><div>d) Uméd = (2/π) × 325,3 = 207,1 V</div><div>e) u = 325,3 × sen(314 × 0,0025) = 325,3 × sen 45° = 230 V</div></div></details>
+    <details class="worked"><summary>Exemplo resolvido 6.2 <span class="q">Uma lâmpada absorve uma corrente com amplitude 1,29 A e período 16,7 ms. Frequência, valor eficaz e valor médio?</span></summary>
+      <div class="steps"><div>f = 1 / 0,0167 = 59,9 Hz ≈ 60 Hz</div><div>I = 1,29 / √2 = 0,91 A</div><div>Iméd = (2/π) × 1,29 = 0,82 A</div></div></details>
+    <div class="panel tool" data-tool="sinusoide"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">6.7</span>Fase, fasores e desfasamento</h3>
+    <div class="grid2">
+      <p>Uma grandeza sinusoidal pode representar-se por um <b>fasor</b>: um vetor que roda a ω rad/s, com comprimento igual ao valor máximo (ou eficaz) e ângulo igual à fase. A sua projeção vertical dá o valor instantâneo. Com fasores, somar sinusoides da mesma frequência passa a ser somar vetores. Nos diagramas vetoriais desenham-se os fasores parados em t = 0, com os valores eficazes.</p>
+      <figure class="fig sm"><div class="pic"><img src="img/fasor.webp" alt="Fasor a rodar num círculo e a sinusoide correspondente" loading="lazy"></div><figcaption>Figura 33 – Fasor e sinusoide correspondente</figcaption></figure>
+    </div>
+    <p>Duas grandezas com a mesma frequência podem estar desfasadas: uma atinge o máximo antes da outra. O desfasamento φ calcula-se a partir do atraso Δt entre elas. Diz-se que a corrente está em atraso (ou em avanço) de φ em relação à tensão. Com φ = 0° estão em fase; com φ = 90°, em quadratura.</p>
+    <div class="formula">φ = 360° · Δt / T</div>
+    <figure class="fig"><div class="pic"><img src="img/desfasamento-60.webp" alt="Tensão e corrente com a corrente em atraso de 60 graus, e diagrama de fasores" loading="lazy"></div><figcaption>Figura 34 – Corrente em atraso de 60° em relação à tensão</figcaption></figure>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">6.8</span>O osciloscópio</h3>
+    <p>O osciloscópio mostra a forma de onda de uma tensão em função do tempo. O ecrã está dividido numa grelha (normalmente 10 × 8 divisões):</p>
+    <ul class="facts">
+      <li><b>Eixo vertical:</b> sensibilidade em volts por divisão (V/div), escolhida em cada canal.</li>
+      <li><b>Eixo horizontal:</b> base de tempo, em s/div, ms/div ou μs/div.</li>
+      <li><b>Trigger (disparo):</b> sincroniza o varrimento com o sinal e estabiliza a imagem.</li>
+      <li><b>Acoplamento:</b> DC (sinal completo) ou AC (retira a componente contínua).</li>
+      <li>Dois canais (CH1, CH2) permitem comparar sinais e medir desfasamentos.</li>
+      <li>As pontas ×10 devem ser compensadas com o sinal de calibração do aparelho.</li>
+    </ul>
+    <div class="note danger"><b>Segurança.</b> As massas das pontas estão ligadas à terra através do osciloscópio: nunca as ligar a pontos com tensões diferentes. Na rede de 230 V é obrigatório usar sonda diferencial ou transformador de isolamento. Nunca se retira a ligação à terra do osciloscópio.</div>
+    <details class="worked"><summary>Exemplo resolvido 6.3 <span class="q">O sinal ocupa 6 divisões de pico a pico (5 V/div) e um ciclo ocupa 4 divisões (5 ms/div). Determine Upp, Umáx, U, T e f.</span></summary>
+      <div class="steps"><div>Upp = 6 × 5 = 30 V; Umáx = 15 V; U = 15 / √2 = 10,61 V</div><div>T = 4 × 5 ms = 20 ms; f = 1 / 0,02 = 50 Hz</div></div></details>
+    <details class="worked"><summary>Exemplo resolvido 6.4 <span class="q">Dois sinais com período de 4 divisões; a passagem por zero de i está 0,5 divisão depois da de u. Desfasamento?</span></summary>
+      <div class="steps"><div>φ = 360° × 0,5 / 4 = 45°</div><div class="c">i passa por zero depois de u: i está em atraso (carga indutiva).</div></div></details>
+    <div class="panel tool" data-tool="osciloscopio"></div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="6-1"><p class="q"><b class="n">1.</b>Numa rede de 120 V e 60 Hz, calcule o período e a amplitude da tensão.</p>
+      <div class="ain"><span class="in" data-ans="16.67" data-u="ms">T =</span><span class="in" data-ans="169.7" data-u="V">Umáx =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>T = 1 / 60 = 16,7 ms</div><div>Umáx = √2 × 120 = 169,7 V</div></div></details></div>
+    <div class="ex" data-id="6-2"><p class="q"><b class="n">2.</b>Uma corrente é dada por i = 100 · sen(314t) mA. Indique Imáx, o valor eficaz, a frequência e o valor médio numa alternância.</p>
+      <div class="ain"><span class="in" data-ans="100" data-u="mA">Imáx =</span><span class="in" data-ans="70.7" data-u="mA">I =</span><span class="in" data-ans="50" data-u="Hz">f =</span><span class="in" data-ans="63.7" data-u="mA">Iméd =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>Imáx = 100 mA; I = 100 / √2 = 70,7 mA</div><div>f = ω / 2π = 314 / 6,283 = 50 Hz</div><div>Iméd = (2/π) × 100 = 63,7 mA</div></div></details></div>
+    <div class="ex" data-id="6-3"><p class="q"><b class="n">3.</b>No osciloscópio (2 V/div; 2 ms/div), um sinal ocupa 4 div de pico a pico e um ciclo ocupa 5 div. Calcule Upp, U, T e f.</p>
+      <div class="ain"><span class="in" data-ans="8" data-u="V">Upp =</span><span class="in" data-ans="2.83" data-u="V">U =</span><span class="in" data-ans="10" data-u="ms">T =</span><span class="in" data-ans="100" data-u="Hz">f =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>Upp = 4 × 2 = 8 V → Umáx = 4 V → U = 4 / √2 = 2,83 V</div><div>T = 5 × 2 ms = 10 ms → f = 1 / 0,01 = 100 Hz</div></div></details></div>
+    <div class="ex" data-id="6-4"><p class="q"><b class="n">4.</b>Dois sinais com período de 5 div estão desfasados de 1 div. Calcule φ.</p>
+      <div class="ain"><span class="in" data-ans="72" data-u="°">φ =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>φ = 360° × 1 / 5 = 72°</div></div></details></div>
+    <div class="ex" data-id="6-5"><p class="q"><b class="n">5.</b>Porque se diz que a tomada tem 230 V, se a tensão chega a mais de 300 V?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">230 V é o valor eficaz: a tensão contínua que produziria o mesmo calor numa resistência. O valor de pico é √2 × 230 ≈ 325 V.</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 7 ====================== -->
+<section class="topic" id="cap-7" data-part="2" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 7 · Parte 2, slides 35–47</span>
+    <h2>Circuitos R, L e C em corrente alternada</h2>
+    <p class="lead">Em CA, a resistência comporta-se como em CC, mas a bobina e o condensador passam a ter uma oposição que depende da frequência: a reatância.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">7.1</span>Esquemas elétricos e simbologia</h3>
+    <figure class="fig"><div class="pic"><img src="img/simbolos.webp" alt="Símbolos de fonte CA, fonte CC, resistência, bobina, condensador, voltímetro, amperímetro, lâmpada, fusível, interruptor e terra" loading="lazy"></div><figcaption>Figura 37 – Símbolos mais usados</figcaption></figure>
+    <div class="tbl"><table>
+      <thead><tr><th>Tipo de esquema</th><th>Para que serve</th></tr></thead>
+      <tbody>
+        <tr><td>Esquema de princípio (funcional)</td><td>Mostra como o circuito funciona, sem a disposição real dos componentes</td></tr>
+        <tr><td>Esquema unifilar</td><td>Representa cada circuito por um só traço; usado em instalações elétricas</td></tr>
+        <tr><td>Esquema multifilar</td><td>Representa todos os condutores (fase, neutro, terra)</td></tr>
+        <tr><td>Esquema de ligações (cablagem)</td><td>Mostra onde se liga cada fio, para montagem e reparação</td></tr>
+      </tbody></table></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">7.2</span>Impedância e Lei de Ohm generalizada</h3>
+    <p>Em corrente alternada, a oposição total à corrente chama-se <b>impedância (Z)</b> e mede-se em ohm. Resulta das resistências (R) e das reatâncias: indutiva (XL) e capacitiva (XC). As reatâncias dependem da frequência; a resistência não. R e X não se somam aritmeticamente, mas vetorialmente, e entre a tensão e a corrente aparece um desfasamento φ.</p>
+    <div class="formula"><span>U = Z · I</span><span>Z = √(R² + X²)</span><small>Com valores eficazes.</small></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">7.3</span>Circuito puramente resistivo</h3>
+    <div class="grid2">
+      <p>A resistência comporta-se como em corrente contínua: I = U / R, usando valores eficazes. A tensão e a corrente estão <b>em fase</b> (φ = 0°): anulam-se e atingem o máximo ao mesmo tempo. Toda a energia é convertida em calor: P = R · I² = U · I.</p>
+      <figure class="fig sm"><div class="pic"><img src="img/circ-resistivo.webp" alt="Tensão e corrente em fase" loading="lazy"></div><figcaption>Figura 38 – Circuito resistivo: tensão e corrente em fase</figcaption></figure>
+    </div>
+    <details class="worked"><summary>Exemplo resolvido 7.1 <span class="q">Uma resistência de 200 Ω é ligada a 24 V em CC e depois a 24 V (eficaz) em CA. Calcule I, P e a energia em 5 h.</span></summary>
+      <div class="steps"><div>Nos dois casos: I = 24 / 200 = 0,12 A; P = 200 × 0,12² = 2,88 W; W = 2,88 × 5 = 14,4 Wh</div><div class="c">Com valores eficazes, a resistência comporta-se da mesma forma em CC e em CA – é essa a definição de valor eficaz.</div></div></details>
+    <details class="worked"><summary>Exemplo resolvido 7.2 <span class="q">Dois recetores caloríficos de 500 W e 750 W em paralelo a 230 V / 50 Hz: correntes, resistências e energia em 3 h.</span></summary>
+      <div class="steps"><div>I1 = 500 / 230 = 2,17 A; I2 = 750 / 230 = 3,26 A; estão em fase: I = 5,43 A</div><div>R1 = 230² / 500 = 105,8 Ω; R2 = 230² / 750 = 70,5 Ω</div><div>W = 1,25 kW × 3 h = 3,75 kWh</div></div></details>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">7.4</span>Circuito puramente indutivo</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>Numa bobina ideal (R = 0), a oposição à corrente é a <b>reatância indutiva XL</b>, que aumenta com a frequência. Em CC (f = 0), XL = 0. A corrente fica <b>em atraso de 90°</b> em relação à tensão. A bobina não consome energia ativa: armazena-a no campo magnético num quarto de período e devolve-a no seguinte (P = 0).</p>
+        <div class="formula"><span>XL = 2π · f · L = ω · L</span><span>I = U / XL</span></div>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/circ-indutivo.webp" alt="Corrente em atraso de 90 graus em relação à tensão" loading="lazy"></div><figcaption>Figura 39 – Circuito indutivo: corrente em atraso de 90°</figcaption></figure>
+    </div>
+    <details class="worked"><summary>Exemplo resolvido 7.3 <span class="q">Bobina pura com L = 0,7 H ligada a 110 V, 50 Hz: XL, I, potência ativa, U · I e energia máxima.</span></summary>
+      <div class="steps"><div>XL = 2π × 50 × 0,7 = 219,9 Ω; I = 110 / 219,9 = 0,50 A</div><div>P = R · I² = 0 (bobina pura)</div><div>U · I = 110 × 0,5 = 55 VA – é potência reativa (Q = 55 var, capítulo 10)</div><div>Imáx = √2 × 0,5 = 0,707 A → W = ½ × 0,7 × 0,707² = 0,175 J</div></div></details>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">7.5</span>Circuito puramente capacitivo</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>Num condensador ideal, a oposição à corrente é a <b>reatância capacitiva XC</b>, que diminui com a frequência. Em CC (f = 0), XC é infinita: depois de carregado, o condensador é um circuito aberto. A corrente fica <b>em avanço de 90°</b> em relação à tensão. Também não consome energia ativa: armazena-a no campo elétrico e devolve-a (P = 0).</p>
+        <div class="formula"><span>XC = 1 / (2π · f · C)</span><span>I = U / XC</span></div>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/circ-capacitivo.webp" alt="Corrente em avanço de 90 graus em relação à tensão" loading="lazy"></div><figcaption>Figura 40 – Circuito capacitivo: corrente em avanço de 90°</figcaption></figure>
+    </div>
+    <details class="worked"><summary>Exemplo resolvido 7.4 <span class="q">Condensador de 8 μF ligado a 230 V, 50 Hz: XC, I, potência ativa, desfasamento e energia máxima.</span></summary>
+      <div class="steps"><div>XC = 1 / (2π × 50 × 8 × 10⁻⁶) = 397,9 Ω; I = 230 / 397,9 = 0,58 A</div><div>P = 0; desfasamento de 90°, com I em avanço</div><div>Umáx = 325,3 V → W = ½ × 8 × 10⁻⁶ × 325,3² = 0,423 J</div></div></details>
+    <div class="panel tool" data-tool="rlc1"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">7.6</span>Resumo</h3>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Resistência</th><th>Bobina</th><th>Condensador</th></tr></thead>
+      <tbody>
+        <tr><td>Oposição</td><td class="m">R</td><td class="m">XL = 2πfL</td><td class="m">XC = 1/(2πfC)</td></tr>
+        <tr><td>Se f aumenta</td><td>não muda</td><td>XL aumenta</td><td>XC diminui</td></tr>
+        <tr><td>Corrente em relação à tensão</td><td>em fase (0°)</td><td>atraso de 90°</td><td>avanço de 90°</td></tr>
+        <tr><td>Em CC</td><td>igual</td><td>curto-circuito (só R do fio)</td><td>circuito aberto</td></tr>
+        <tr><td>Energia</td><td>transforma em calor</td><td>armazena no campo magnético</td><td>armazena no campo elétrico</td></tr>
+      </tbody></table></div>
+    <div class="note"><b>Mnemónica.</b> «CIVIL»: no <b>C</b>ondensador a <b>I</b> vem antes de <b>V</b>; na bobina (<b>L</b>) a <b>V</b> vem antes de <b>I</b>.</div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="7-1"><p class="q"><b class="n">1.</b>Uma bobina pura de 0,2 H está ligada a 230 V, 50 Hz. Calcule XL e I. Quanto vale XL a 1 kHz?</p>
+      <div class="ain"><span class="in" data-ans="62.8" data-u="Ω">XL =</span><span class="in" data-ans="3.66" data-u="A">I =</span><span class="in" data-ans="1257" data-u="Ω">XL (1 kHz) =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>XL = 2π × 50 × 0,2 = 62,8 Ω; I = 230 / 62,8 = 3,66 A</div><div>A 1 kHz: XL = 2π × 1000 × 0,2 = 1257 Ω (20 vezes maior)</div></div></details></div>
+    <div class="ex" data-id="7-2"><p class="q"><b class="n">2.</b>Um condensador de 22 μF está ligado a 230 V, 50 Hz. Calcule XC e I.</p>
+      <div class="ain"><span class="in" data-ans="144.7" data-u="Ω">XC =</span><span class="in" data-ans="1.59" data-u="A">I =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>XC = 1 / (2π × 50 × 22 × 10⁻⁶) = 144,7 Ω</div><div>I = 230 / 144,7 = 1,59 A</div></div></details></div>
+    <div class="ex" data-id="7-3"><p class="q"><b class="n">3.</b>Explique porque é que um condensador «bloqueia» a CC e deixa passar a CA.</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Em CC (f = 0), XC = 1/(2πfC) é infinita: depois de carregado não há corrente. Em CA o condensador carrega e descarrega continuamente, e a corrente circula no circuito; quanto maior f, menor XC.</div></div></details></div>
+    <div class="ex" data-id="7-4"><p class="q"><b class="n">4.</b>Um aquecedor de 2 kW funciona a 230 V. Calcule a corrente e a resistência.</p>
+      <div class="ain"><span class="in" data-ans="8.70" data-u="A">I =</span><span class="in" data-ans="26.45" data-u="Ω">R =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>I = 2000 / 230 = 8,70 A</div><div>R = 230² / 2000 = 26,45 Ω</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 8 ====================== -->
+<section class="topic" id="cap-8" data-part="2" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 8 · Parte 2, slides 48–58</span>
+    <h2>Circuitos RLC série e paralelo</h2>
+    <p class="lead">Juntando R, L e C, as tensões (em série) ou as correntes (em paralelo) somam-se como vetores. O diagrama vetorial é a ferramenta principal.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">8.1</span>Circuito RLC série</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>No circuito série, a corrente I é a mesma em todos os elementos e serve de referência do diagrama vetorial. Cada elemento tem a sua tensão: UR = R · I, em fase com I; UL = XL · I, 90° à frente; UC = XC · I, 90° atrás. UL e UC são opostas e subtraem-se. A tensão total é a soma vetorial:</p>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/rlc-serie.webp" alt="Fonte alternada com R, L e C em série" loading="lazy"></div><figcaption>Figura 41 – Circuito RLC série</figcaption></figure>
+    </div>
+    <div class="formula"><span>U = √(UR² + (UL − UC)²)</span><span>Z = √(R² + (XL − XC)²)</span><span>I = U / Z</span><span>cos φ = R / Z</span><span>tg φ = (XL − XC) / R</span></div>
+    <figure class="fig"><div class="pic"><img src="img/triangulo-impedancias.webp" alt="Triângulo de impedâncias e diagrama vetorial das tensões" loading="lazy"></div><figcaption>Figura 42 – Triângulo de impedâncias e diagrama vetorial do RLC série</figcaption></figure>
+    <ul class="facts">
+      <li><b>XL &gt; XC:</b> circuito indutivo; a corrente está em atraso (φ &gt; 0).</li>
+      <li><b>XL &lt; XC:</b> circuito capacitivo; a corrente está em avanço (φ &lt; 0).</li>
+      <li><b>XL = XC:</b> Z = R e φ = 0 – ressonância (<a href="#cap-9">capítulo 9</a>).</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">8.2</span>Procedimento de análise</h3>
+    <ol class="facts">
+      <li>Desenhar o esquema e registar os dados (U, f, R, L, C).</li>
+      <li>Calcular as reatâncias: XL = 2πfL e XC = 1/(2πfC).</li>
+      <li>Calcular a impedância: Z = √(R² + (XL − XC)²).</li>
+      <li>Calcular a corrente: I = U / Z.</li>
+      <li>Calcular as tensões parciais: UR = R·I, UL = XL·I e UC = XC·I.</li>
+      <li>Calcular φ e cos φ = R / Z e dizer se o circuito é indutivo ou capacitivo.</li>
+      <li>Verificar: desenhar o diagrama vetorial e confirmar que U = √(UR² + (UL − UC)²).</li>
+    </ol>
+    <details class="worked"><summary>Exemplo resolvido 8.1 <span class="q">R = 40 Ω, L = 0,3 H e C = 100 μF em série, a 230 V / 50 Hz.</span></summary>
+      <div class="steps"><div>XL = 2π × 50 × 0,3 = 94,2 Ω; XC = 1 / (2π × 50 × 100 × 10⁻⁶) = 31,8 Ω</div><div>Z = √(40² + (94,2 − 31,8)²) = 74,1 Ω; I = 230 / 74,1 = 3,10 A</div><div>UR = 124,1 V; UL = 292,4 V; UC = 98,8 V</div><div>cos φ = 40 / 74,1 = 0,54 → φ = 57,3° (indutivo)</div><div>Verificação: √(124,1² + (292,4 − 98,8)²) = 230 V</div></div></details>
+    <div class="note warn"><b>Atenção.</b> Neste exemplo UL = 292 V, mais do que a tensão da rede. Num circuito série, as tensões nas bobinas e nos condensadores podem ultrapassar a tensão aplicada: os componentes têm de ser escolhidos com tensão nominal adequada.</div>
+    <div class="panel tool" data-tool="rlc" data-mode="serie"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">8.3</span>Casos particulares: RL e RC série</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Circuito</th><th>Impedância</th><th>Desfasamento</th><th>Exemplos</th></tr></thead>
+      <tbody>
+        <tr><td>RL série</td><td class="m">Z = √(R² + XL²)</td><td>I em atraso (0° &lt; φ &lt; 90°)</td><td>motores, balastros, bobinas reais</td></tr>
+        <tr><td>RC série</td><td class="m">Z = √(R² + XC²)</td><td>I em avanço (−90° &lt; φ &lt; 0°)</td><td>filtros, temporizadores, acoplamento</td></tr>
+      </tbody></table></div>
+    <p>Uma bobina real tem sempre a resistência do fio e comporta-se como um circuito RL série. O mesmo acontece com um motor: tem uma parte resistiva (trabalho útil e perdas) e uma parte indutiva (campo magnético). No simulador, ponha C = 0 para obter um RL, ou L = 0 para um RC.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">8.4</span>Circuito RLC paralelo</h3>
+    <div class="grid2">
+      <div class="sec">
+        <p>No circuito paralelo, a tensão U é a mesma em todos os ramos e serve de referência. As correntes são IR = U/R (em fase), IL = U/XL (atraso de 90°) e IC = U/XC (avanço de 90°). IL e IC são opostas e subtraem-se:</p>
+        <div class="formula"><span>I = √(IR² + (IC − IL)²)</span><span>Z = U / I</span><span>cos φ = IR / I</span></div>
+      </div>
+      <figure class="fig sm"><div class="pic"><img src="img/rlc-paralelo.webp" alt="Fonte alternada com R, L e C em paralelo" loading="lazy"></div><figcaption>Figura 43 – Circuito RLC paralelo</figcaption></figure>
+    </div>
+    <details class="worked"><summary>Exemplo resolvido 8.2 <span class="q">R = 100 Ω, L = 0,5 H e C = 40 μF em paralelo, a 230 V / 50 Hz.</span></summary>
+      <div class="steps"><div>XL = 157,1 Ω; XC = 79,6 Ω</div><div>IR = 2,30 A; IL = 1,46 A; IC = 2,89 A</div><div>I = √(2,30² + (2,89 − 1,46)²) = 2,71 A; Z = 230 / 2,71 = 85,0 Ω</div><div>cos φ = 2,30 / 2,71 = 0,85; IC &gt; IL: circuito capacitivo.</div><div class="c">A corrente total é menor do que a soma das correntes dos ramos.</div></div></details>
+    <div class="panel tool" data-tool="rlc" data-mode="paralelo"></div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="8-1"><p class="q"><b class="n">1.</b>R = 30 Ω, L = 0,2 H e C = 100 μF em série, a 230 V / 50 Hz. Calcule XL, XC, Z, I, as tensões parciais e cos φ. É indutivo ou capacitivo?</p>
+      <div class="ain"><span class="in" data-ans="62.8" data-u="Ω">XL =</span><span class="in" data-ans="31.8" data-u="Ω">XC =</span><span class="in" data-ans="43.1" data-u="Ω">Z =</span><span class="in" data-ans="5.33" data-u="A">I =</span><span class="in" data-ans="160" data-u="V">UR =</span><span class="in" data-ans="335" data-u="V">UL =</span><span class="in" data-ans="170" data-u="V">UC =</span><span class="in" data-ans="0.70" data-u="">cos φ =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>XL = 2π × 50 × 0,2 = 62,8 Ω; XC = 1 / (2π × 50 × 100 × 10⁻⁶) = 31,8 Ω</div><div>Z = √(30² + (62,8 − 31,8)²) = 43,1 Ω; I = 230 / 43,1 = 5,33 A</div><div>UR = 30 × 5,33 = 160 V; UL = 62,8 × 5,33 = 335 V; UC = 31,8 × 5,33 = 170 V</div><div>cos φ = 30 / 43,1 = 0,70 (φ = 45,9°); XL &gt; XC: indutivo</div></div></details></div>
+    <div class="ex" data-id="8-2"><p class="q"><b class="n">2.</b>Uma bobina real tem R = 60 Ω e XL = 80 Ω e está ligada a 100 V. Calcule Z, I, UR, UL e cos φ.</p>
+      <div class="ain"><span class="in" data-ans="100" data-u="Ω">Z =</span><span class="in" data-ans="1" data-u="A">I =</span><span class="in" data-ans="60" data-u="V">UR =</span><span class="in" data-ans="80" data-u="V">UL =</span><span class="in" data-ans="0.6" data-u="">cos φ =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>Z = √(60² + 80²) = 100 Ω; I = 100 / 100 = 1 A</div><div>UR = 60 V; UL = 80 V; cos φ = 60 / 100 = 0,6</div></div></details></div>
+    <div class="ex" data-id="8-3"><p class="q"><b class="n">3.</b>R = 50 Ω, XL = 100 Ω e XC = 50 Ω em paralelo, a 100 V. Calcule IR, IL, IC, I e Z.</p>
+      <div class="ain"><span class="in" data-ans="2" data-u="A">IR =</span><span class="in" data-ans="1" data-u="A">IL =</span><span class="in" data-ans="2" data-u="A">IC =</span><span class="in" data-ans="2.24" data-u="A">I =</span><span class="in" data-ans="44.7" data-u="Ω">Z =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>IR = 100 / 50 = 2 A; IL = 100 / 100 = 1 A; IC = 100 / 50 = 2 A</div><div>I = √(2² + (2 − 1)²) = 2,24 A; Z = 100 / 2,24 = 44,7 Ω</div></div></details></div>
+    <div class="ex" data-id="8-4"><p class="q"><b class="n">4.</b>Num RLC série, como se explica que UC possa ser maior do que a tensão da fonte?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">UL e UC estão em oposição (180°) e anulam-se parcialmente na soma vetorial. Cada uma pode ser grande, mas a sua diferença é pequena, por isso U total pode ser menor do que UC ou UL.</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 9 ====================== -->
+<section class="topic" id="cap-9" data-part="2" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 9 · Parte 2, slides 59–65</span>
+    <h2>Ressonância</h2>
+    <p class="lead">Como XL aumenta e XC diminui com a frequência, há uma frequência f0 em que XL = XC e as reatâncias se anulam.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">9.1</span>O fenómeno</h3>
+    <div class="formula">f0 = 1 / (2π · √(L · C))</div>
+    <figure class="fig"><div class="pic"><img src="img/ressonancia.webp" alt="Reatâncias XL e XC a cruzarem-se e pico de corrente em f0" loading="lazy"></div><figcaption>Figura 45 – Reatâncias e corrente de um RLC série em função da frequência</figcaption></figure>
+    <p>No circuito série em ressonância, Z = R (mínima), a corrente é máxima e a tensão e a corrente ficam em fase.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">9.2</span>Ressonância série e paralelo</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Em f0</th><th>RLC série</th><th>RLC paralelo</th></tr></thead>
+      <tbody>
+        <tr><td>Impedância</td><td>mínima: Z = R</td><td>máxima</td></tr>
+        <tr><td>Corrente da fonte</td><td>máxima: I = U / R</td><td>mínima</td></tr>
+        <tr><td>Fator de potência</td><td>cos φ = 1</td><td>cos φ = 1</td></tr>
+        <tr><td>Cuidado</td><td>UL e UC podem ser muito maiores do que U (sobretensões)</td><td>IL e IC podem ser muito maiores do que I (sobrecorrentes)</td></tr>
+        <tr><td>Uso típico</td><td>selecionar uma frequência (deixa passar)</td><td>rejeitar uma frequência (bloqueia)</td></tr>
+      </tbody></table></div>
+    <details class="worked"><summary>Exemplo resolvido 9.1 <span class="q">RLC série com R = 10 Ω, L = 0,1 H e C = 10 μF, alimentado por 10 V: f0, corrente e tensão na bobina.</span></summary>
+      <div class="steps"><div>f0 = 1 / (2π × √(0,1 × 10 × 10⁻⁶)) = 159,2 Hz</div><div>Em ressonância Z = R: I = 10 / 10 = 1 A</div><div>XL = 2π × 159,2 × 0,1 = 100 Ω → UL = 100 × 1 = 100 V</div><div class="c">Com 10 V na fonte aparecem 100 V na bobina e no condensador: é a sobretensão de ressonância.</div></div></details>
+    <div class="panel tool" data-tool="ressonancia"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">9.3</span>Aplicações</h3>
+    <ul class="facts">
+      <li><b>Filtros:</b> deixam passar ou bloqueiam uma banda de frequências (áudio, fontes, harmónicos).</li>
+      <li><b>Osciladores:</b> geram sinais de frequência estável (relógios, emissores).</li>
+      <li><b>Antenas e transmissão:</b> na sintonia de rádio e televisão, o circuito LC escolhe a estação.</li>
+      <li><b>Sistemas de potência:</b> as baterias de condensadores podem entrar em ressonância com harmónicos da rede – um risco a evitar.</li>
+      <li><b>Equipamentos de medição:</b> medidores de frequência, pontes de impedância, detetores de metais.</li>
+      <li><b>Inversores:</b> conversores ressonantes de alto rendimento e aquecimento por indução.</li>
+      <li><b>Imagiologia médica:</b> a ressonância magnética usa bobinas sintonizadas para emitir e captar sinais.</li>
+    </ul>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="9-1"><p class="q"><b class="n">1.</b>Calcule a frequência de ressonância de um circuito com L = 50 mH e C = 2 μF.</p>
+      <div class="ain"><span class="in" data-ans="503" data-u="Hz">f0 =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>f0 = 1 / (2π × √(0,05 × 2 × 10⁻⁶)) = 1 / (2π × 3,16 × 10⁻⁴) = 503 Hz</div></div></details></div>
+    <div class="ex" data-id="9-2"><p class="q"><b class="n">2.</b>Num RLC série em ressonância, quanto vale a impedância? E o fator de potência?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Z = R (a mínima possível) e cos φ = 1: a tensão e a corrente estão em fase.</div></div></details></div>
+    <div class="ex" data-id="9-3"><p class="q"><b class="n">3.</b>Porque é que, em ressonância série, a tensão no condensador pode ultrapassar a da fonte?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">A corrente é máxima (I = U/R) e UC = XC · I. Se XC for muito maior do que R, UC fica muitas vezes maior do que U. UL e UC são iguais e opostas e anulam-se no total.</div></div></details></div>
+    <div class="ex" data-id="9-4"><p class="q"><b class="n">4.</b>Dê dois exemplos de equipamentos que usam ressonância.</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Por exemplo: sintonizador de rádio, filtro de áudio, oscilador de relógio, placa de indução, detetor de metais, ressonância magnética.</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 10 ====================== -->
+<section class="topic" id="cap-10" data-part="2" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 10 · Parte 2, slides 66–76</span>
+    <h2>Potências e fator de potência</h2>
+    <p class="lead">Com desfasamento, parte da corrente não produz trabalho: vai e volta entre a rede e as bobinas ou condensadores. Compensar o fator de potência é reduzir essa parte.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">10.1</span>Potências em corrente alternada</h3>
+    <p>Em corrente contínua, P = U · I. Em corrente alternada isso só é verdade quando a tensão e a corrente estão em fase. Distinguem-se três potências:</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Potência</th><th>Fórmula</th><th>Unidade</th><th>Significado</th></tr></thead>
+      <tbody>
+        <tr><td>Ativa (P)</td><td class="m">P = U · I · cos φ</td><td>watt (W)</td><td>transformada em trabalho e calor</td></tr>
+        <tr><td>Reativa (Q)</td><td class="m">Q = U · I · sen φ</td><td>volt-ampere reativo (var)</td><td>trocada com os campos de L e C</td></tr>
+        <tr><td>Aparente (S)</td><td class="m">S = U · I</td><td>volt-ampere (VA)</td><td>dimensiona cabos, transformadores e geradores</td></tr>
+      </tbody></table></div>
+    <div class="formula"><span>S² = P² + Q²</span><span>cos φ = P / S</span></div>
+    <details class="worked"><summary>Exemplo resolvido 10.1 <span class="q">Um motor a 230 V absorve 10 A com cos φ = 0,8 (sen φ = 0,6). Calcule S, P e Q.</span></summary>
+      <div class="steps"><div>S = 230 × 10 = 2300 VA; P = 2300 × 0,8 = 1840 W; Q = 2300 × 0,6 = 1380 var</div></div></details>
+    <div class="panel tool" data-tool="potencias"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">10.2</span>Potência por tipo de carga</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Carga</th><th>φ</th><th>P</th><th>Q</th></tr></thead>
+      <tbody>
+        <tr><td>Resistiva (aquecedor, lâmpada incandescente)</td><td class="m">0°</td><td class="m">U · I</td><td class="m">0</td></tr>
+        <tr><td>Indutiva (motor, transformador, balastro)</td><td class="m">0° a 90°</td><td class="m">U · I · cos φ</td><td>positiva (absorve)</td></tr>
+        <tr><td>Capacitiva (condensador)</td><td class="m">0° a −90°</td><td class="m">≈ 0</td><td>negativa (fornece)</td></tr>
+      </tbody></table></div>
+    <p>A lei de Joule aplica-se em CA com a corrente eficaz: P = R · I². As perdas nas linhas dependem da corrente total, incluindo a parte reativa. Os contadores registam a energia ativa (kWh) e, em instalações maiores, a energia reativa (kvarh), que pode ser faturada.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">10.3</span>Soma de potências (teorema de Boucherot)</h3>
+    <p>Numa instalação com várias cargas somam-se as potências ativas e as potências reativas, mas <b>nunca as aparentes</b>: PT = ΣP; QT = ΣQ; ST = √(PT² + QT²).</p>
+    <div class="panel tool" data-tool="boucherot"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">10.4</span>Fator de potência</h3>
+    <p>O fator de potência cos φ = P / S indica que parte da potência aparente é útil; varia entre 0 e 1. Motores, transformadores e iluminação fluorescente com balastro têm cos φ baixo. Para a mesma potência útil, cos φ baixo significa corrente maior: I = P / (U · cos φ). Daí resultam:</p>
+    <ul class="facts">
+      <li>mais perdas por efeito Joule nos cabos e transformadores;</li>
+      <li>maiores quedas de tensão;</li>
+      <li>cabos, aparelhagem e transformadores sobredimensionados;</li>
+      <li>custo da energia reativa nas instalações em que é faturada.</li>
+    </ul>
+    <p>Por exemplo, 5 kW a 230 V exigem 31,1 A com cos φ = 0,7, mas apenas 22,9 A com cos φ = 0,95. Compensar é aproximar cos φ de 1, normalmente para 0,95 ou mais.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">10.5</span>Compensação com condensadores</h3>
+    <div class="grid2">
+      <p>Ligam-se condensadores <b>em paralelo</b> com a carga. Os condensadores fornecem a energia reativa que a carga pede, de modo que a rede deixa de a ter de transportar. A potência ativa mantém-se; Q e S diminuem; a corrente na linha baixa.</p>
+      <figure class="fig sm"><div class="pic"><img src="img/compensacao.webp" alt="Rede de 230 V com banco de condensadores em paralelo com a carga indutiva" loading="lazy"></div><figcaption>Figura 47 – Compensação com condensadores em paralelo</figcaption></figure>
+    </div>
+    <div class="formula"><span>QC = P · (tg φ1 − tg φ2)</span><span>C = QC / (ω · U²)</span></div>
+    <details class="worked"><summary>Exemplo resolvido 10.2 <span class="q">Um motor absorve 5 kW a 230 V / 50 Hz com cos φ = 0,7. Pretende-se cos φ = 0,95. Calcule QC, C e as correntes.</span></summary>
+      <div class="steps"><div>tg φ1 = 1,020; tg φ2 = 0,329</div><div>QC = 5000 × (1,020 − 0,329) = 3458 var</div><div>C = 3458 / (314,16 × 230²) = 208 μF</div><div>Antes: I1 = 5000 / (230 × 0,7) = 31,1 A; depois: I2 = 5000 / (230 × 0,95) = 22,9 A</div></div></details>
+    <div class="panel tool" data-tool="compensacao"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">10.6</span>Bancos de condensadores</h3>
+    <ul class="facts">
+      <li><b>Compensação individual:</b> um condensador junto de cada motor ou luminária.</li>
+      <li><b>Por grupo:</b> um banco por quadro parcial.</li>
+      <li><b>Global:</b> um banco no quadro geral.</li>
+      <li><b>Fixa:</b> para cargas constantes.</li>
+      <li><b>Automática:</b> um regulador de fator de potência liga e desliga escalões consoante a carga, evitando sobrecompensar.</li>
+    </ul>
+    <p>Para ajustar a configuração: medir P, Q e cos φ com um analisador de energia; calcular QC e escolher os escalões; programar o cos φ pretendido no regulador; confirmar que não há sobrecompensação (cos φ capacitivo). Os condensadores ficam carregados depois de desligados: devem ter resistências de descarga e respeitar-se o procedimento da <a href="#cap-2">secção 2.6</a>.</p>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="10-1"><p class="q"><b class="n">1.</b>Uma carga absorve 400 VA com cos φ = 0,75. Calcule P e Q.</p>
+      <div class="ain"><span class="in" data-ans="300" data-u="W">P =</span><span class="in" data-ans="264.6" data-u="var">Q =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>P = 400 × 0,75 = 300 W</div><div>sen φ = √(1 − 0,75²) = 0,661 → Q = 400 × 0,661 = 264,6 var</div></div></details></div>
+    <div class="ex" data-id="10-2"><p class="q"><b class="n">2.</b>Uma oficina tem P = 10 kW a 230 V / 50 Hz com cos φ = 0,75. Calcule QC e C para obter cos φ = 0,95, e as correntes antes e depois.</p>
+      <div class="ain"><span class="in" data-ans="5532" data-u="var">QC =</span><span class="in" data-ans="333" data-u="μF">C =</span><span class="in" data-ans="58.0" data-u="A">I1 =</span><span class="in" data-ans="45.8" data-u="A">I2 =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>tg φ1 = 0,882; tg φ2 = 0,329</div><div>QC = 10 000 × (0,882 − 0,329) = 5532 var</div><div>C = 5532 / (314,16 × 230²) = 333 μF</div><div>I1 = 10 000 / (230 × 0,75) = 58,0 A; I2 = 10 000 / (230 × 0,95) = 45,8 A</div></div></details></div>
+    <div class="ex" data-id="10-3"><p class="q"><b class="n">3.</b>Uma instalação tem aquecimento de 3 kW (cos φ = 1) e motores de 4 kW (cos φ = 0,8). Calcule PT, QT, ST e cos φT.</p>
+      <div class="ain"><span class="in" data-ans="7000" data-u="W">PT =</span><span class="in" data-ans="3000" data-u="var">QT =</span><span class="in" data-ans="7616" data-u="VA">ST =</span><span class="in" data-ans="0.92" data-u="">cos φT =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>PT = 3000 + 4000 = 7000 W</div><div>QT = 0 + 4000 × tg(acos 0,8) = 4000 × 0,75 = 3000 var</div><div>ST = √(7000² + 3000²) = 7616 VA; cos φT = 7000 / 7616 = 0,92</div></div></details></div>
+    <div class="ex" data-id="10-4"><p class="q"><b class="n">4.</b>Porque é que a compensação se faz com condensadores em paralelo e não em série?</p>
+      <details><summary>Ver resposta</summary><div class="sol"><div class="c">Em paralelo, a carga continua a receber a tensão da rede e funciona como antes; o condensador só fornece a energia reativa. Em série, o condensador alteraria a tensão aplicada à carga e a corrente dela.</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== CAPÍTULO 11 ====================== -->
+<section class="topic" id="cap-11" data-part="2" hidden>
+  <div class="chap-head">
+    <span class="kicker">Capítulo 11 · Parte 2, slides 77–87</span>
+    <h2>Sistemas trifásicos</h2>
+    <p class="lead">Toda a produção e o transporte de energia são trifásicos. A rede portuguesa é 230/400 V: 230 V entre fase e neutro, 400 V entre fases.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">11.1</span>Monofásico e trifásico</h3>
+    <p>O sistema monofásico usa uma fase e o neutro (230 V) e serve habitações e pequenas cargas. O sistema trifásico usa três fases (L1, L2, L3), com ou sem neutro, e tem 400 V entre fases. Para a mesma potência, o trifásico usa menos cobre e tem menores perdas; os motores trifásicos arrancam sozinhos, são mais simples e têm binário mais regular.</p>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">11.2</span>Produção das tensões trifásicas</h3>
+    <p>O alternador trifásico tem três enrolamentos desfasados de 120° no estator. Produz três tensões iguais, desfasadas de 120° (um terço de período). Em cada instante, a soma das três tensões é zero.</p>
+    <div class="panel tool" data-tool="trifasico"></div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">11.3</span>Tensões simples e compostas</h3>
+    <div class="formula">U = √3 · V</div>
+    <ul class="facts">
+      <li><b>Tensão simples (V):</b> entre uma fase e o neutro – 230 V.</li>
+      <li><b>Tensão composta (U):</b> entre duas fases – 400 V.</li>
+      <li>√3 × 230 = 398,4 V ≈ 400 V; por isso a rede portuguesa se designa «230/400 V».</li>
+    </ul>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">11.4</span>Ligação em estrela e em triângulo</h3>
+    <figure class="fig"><div class="pic"><img src="img/estrela-triangulo.webp" alt="Três impedâncias Z ligadas em estrela com neutro e em triângulo" loading="lazy"></div><figcaption>Figura 49 – Cargas ligadas em estrela e em triângulo</figcaption></figure>
+    <div class="tbl"><table>
+      <thead><tr><th></th><th>Estrela (Y)</th><th>Triângulo (Δ)</th></tr></thead>
+      <tbody>
+        <tr><td>Tensão em cada carga</td><td class="m">V = U / √3</td><td class="m">U</td></tr>
+        <tr><td>Corrente de linha</td><td class="m">IL = Ifase</td><td class="m">IL = √3 · Ifase</td></tr>
+        <tr><td>Neutro</td><td>pode ter</td><td>não tem</td></tr>
+      </tbody></table></div>
+    <div class="note"><b>Chapa do motor.</b> Um motor com chapa «230/400 V» liga-se em estrela numa rede com 400 V entre fases e em triângulo numa rede com 230 V entre fases.</div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">11.5</span>Cargas equilibradas e desequilibradas</h3>
+    <p>Numa carga equilibrada, as três fases têm impedâncias iguais (por exemplo, um motor trifásico): as correntes são iguais e desfasadas de 120°, e em estrela a corrente no neutro é zero. Numa carga desequilibrada (por exemplo, habitações ligadas a fases diferentes), as correntes são diferentes e circula corrente no neutro.</p>
+    <div class="note danger"><b>Neutro interrompido.</b> Se o neutro se interromper numa instalação desequilibrada, as tensões nas fases deixam de ser 230 V: há aparelhos sujeitos a sobretensão e outros a subtensão. Por isso as cargas monofásicas distribuem-se pelas três fases e o neutro nunca se protege com fusível.</div>
+  </div>
+
+  <div class="sec">
+    <h3><span class="num">11.6</span>Potências em trifásico</h3>
+    <div class="formula"><span>P = √3 · U · I · cos φ</span><span>Q = √3 · U · I · sen φ</span><span>S = √3 · U · I</span><small>U é a tensão composta e I a corrente de linha; valem para cargas equilibradas, em estrela ou em triângulo. Numa carga desequilibrada calcula-se cada fase e somam-se as potências.</small></div>
+    <details class="worked"><summary>Exemplo resolvido 11.1 <span class="q">Três resistências de 46 Ω em estrela na rede 230/400 V: corrente, potência e corrente no neutro.</span></summary>
+      <div class="steps"><div>I = 230 / 46 = 5 A por fase; P = 3 × 230 × 5 = 3450 W</div><div>Corrente no neutro = 0 A (carga equilibrada)</div></div></details>
+    <details class="worked"><summary>Exemplo resolvido 11.2 <span class="q">Um motor trifásico de 400 V absorve 10 A com cos φ = 0,85. Calcule P, Q e S.</span></summary>
+      <div class="steps"><div>P = √3 × 400 × 10 × 0,85 = 5889 W; Q = 3650 var; S = 6928 VA</div></div></details>
+    <div class="panel tool" data-tool="estrela"></div>
+  </div>
+
+  <div class="exs">
+    <h3>Exercícios</h3>
+    <div class="ex" data-id="11-1"><p class="q"><b class="n">1.</b>Numa rede trifásica com tensão composta de 400 V, qual é a tensão simples?</p>
+      <div class="ain"><span class="in" data-ans="231" data-u="V">V =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>V = 400 / √3 = 231 V (≈ 230 V)</div></div></details></div>
+    <div class="ex" data-id="11-2"><p class="q"><b class="n">2.</b>Um motor trifásico absorve 16 A a 400 V com cos φ = 0,8. Calcule P, Q e S.</p>
+      <div class="ain"><span class="in" data-ans="8868" data-u="W">P =</span><span class="in" data-ans="6651" data-u="var">Q =</span><span class="in" data-ans="11085" data-u="VA">S =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>S = √3 × 400 × 16 = 11 085 VA</div><div>P = 11 085 × 0,8 = 8868 W; Q = 11 085 × 0,6 = 6651 var</div></div></details></div>
+    <div class="ex" data-id="11-3"><p class="q"><b class="n">3.</b>Três resistências de 23 Ω estão ligadas em estrela na rede 230/400 V. Calcule a corrente de fase, a potência total e a corrente no neutro.</p>
+      <div class="ain"><span class="in" data-ans="10" data-u="A">I =</span><span class="in" data-ans="6900" data-u="W">P =</span><span class="in" data-ans="0" data-u="A">IN =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div>I = 230 / 23 = 10 A; P = 3 × 230 × 10 = 6900 W</div><div>IN = 0 A (carga equilibrada)</div></div></details></div>
+    <div class="ex" data-id="11-4"><p class="q"><b class="n">4.</b>Qual é a corrente no neutro se uma das resistências do exercício anterior for desligada?</p>
+      <div class="ain"><span class="in" data-ans="10" data-u="A">IN =</span></div>
+      <details><summary>Ver resolução</summary><div class="sol"><div class="c">Ficam duas correntes de 10 A desfasadas de 120°. A soma vetorial tem também 10 A: passa a circular 10 A no neutro. Confirme no simulador acima, pondo uma das resistências a 0 (desligada).</div></div></details></div>
+  </div>
+</section>
+
+<!-- ====================== LABORATÓRIO ====================== -->
+<section class="topic" id="lab" data-part="2" hidden>
+  <div class="chap-head">
+    <span class="kicker">Anexo C · Atividades de laboratório</span>
+    <h2>Laboratório</h2>
+    <p class="lead">As duas fichas avaliam os critérios de desempenho «efetuando a análise de ondas com osciloscópio» e «ajustando a configuração para compensação do fator de potência». Cada ficha tem a versão do formando e as notas do professor.</p>
+  </div>
+  <div class="cards">
+    <div class="card p2">
+      <span class="tag" style="color:var(--ca)">Ficha 1 · cerca de 3 h · baixa tensão</span>
+      <h3>Análise de ondas com o osciloscópio</h3>
+      <p><b>Material:</b> osciloscópio de 2 canais, gerador de funções, multímetro, resistência de 1 kΩ e condensador de 100 nF.</p>
+      <ul class="facts">
+        <li><b>Parte A:</b> medir Upp, Umáx, U eficaz e T a 50, 500 e 1000 Hz, e comparar com o multímetro.</li>
+        <li><b>Parte B:</b> sinais sinusoidal, quadrado e triangular com o mesmo Upp: o valor eficaz muda com a forma de onda.</li>
+        <li><b>Parte C:</b> medir o desfasamento num circuito RC a 500, 1000 e 2000 Hz. Prever o ângulo antes de medir.</li>
+      </ul>
+      <p>Treino prévio: <a href="#cap-6">osciloscópio virtual do capítulo 6</a>.</p>
+      <p><a href="https://claude.ai/artifact/NrGtWqcDWN5LSrLTHq8h49">Abrir a Ficha 1</a></p>
+    </div>
+    <div class="card p2">
+      <span class="tag" style="color:var(--ca)">Ficha 2 · cerca de 3 h · 230 V</span>
+      <h3>Compensação do fator de potência</h3>
+      <p><b>Material:</b> bancada com diferencial de 30 mA, carga indutiva (luminária fluorescente de 36 W com balastro ferromagnético), analisador de energia e condensadores de 2, 4,5 e 8 μF.</p>
+      <ul class="facts">
+        <li><b>Parte A:</b> medir P, I e cos φ da carga sem compensação.</li>
+        <li><b>Parte B:</b> calcular QC e a capacidade C necessária.</li>
+        <li><b>Parte C:</b> ensaiar os escalões de 0 a 8 μF e escolher o que dá cos φ ≥ 0,95 sem sobrecompensar.</li>
+      </ul>
+      <p>Treino prévio: <a href="#cap-10">calculadora de compensação do capítulo 10</a>.</p>
+      <p><a href="https://claude.ai/artifact/YBvUTRH2UZmQWfqFeUg74j">Abrir a Ficha 2</a></p>
+    </div>
+  </div>
+  <div class="note danger"><b>Segurança na Ficha 2.</b> Todas as ligações se fazem sem tensão; é o professor quem liga o circuito. Os condensadores são descarregados no fim, como na <a href="#cap-2">secção 2.6</a>. Leia-se o cos φ (DPF) do analisador e não o PF: a lâmpada fluorescente produz harmónicos que os condensadores não corrigem.</div>
+</section>
+
+<!-- ====================== VÍDEOS ====================== -->
+<section class="topic" id="videos" data-part="0" hidden>
+  <div class="chap-head">
+    <span class="kicker">Material de apoio</span>
+    <h2>Vídeos de apoio</h2>
+    <p class="lead">Vídeos curtos para rever os conceitos em casa, organizados pelos capítulos da sebenta. Os vídeos abrem no YouTube, numa janela nova. Os vídeos marcados com EN estão em inglês; ative as legendas automáticas em português se precisar.</p>
+  </div>
+  <div id="videos-list" class="sec"></div>
+</section>
+
+<!-- ====================== FORMULÁRIO ====================== -->
+<section class="topic" id="formulario" data-part="0" hidden>
+  <div class="chap-head">
+    <span class="kicker">Anexo A</span>
+    <h2>Formulário</h2>
+    <p class="lead">Todas as fórmulas da UC numa página.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Tema</th><th>Fórmulas</th></tr></thead>
+    <tbody>
+      <tr><td>Corrente contínua</td><td class="m">I = Q/t · U = R·I · R = ρL/S · P = U·I = R·I² = U²/R · W = P·t</td></tr>
+      <tr><td>Associações</td><td class="m">Série: Req = ΣR; Leq = ΣL; 1/CT = Σ1/C<br>Paralelo: 1/Req = Σ1/R; 1/Leq = Σ1/L; CT = ΣC</td></tr>
+      <tr><td>Condensadores</td><td class="m">C = Q/U · C = εA/d · W = ½CU² · τ = R·C</td></tr>
+      <tr><td>Magnetismo</td><td class="m">F = |q|vB sen θ · B = μ0 I/(2πr) · B = μ0 I/(2r) · B = μ0 N I/ℓ · F = B I ℓ sen θ · H = NI/ℓ · B = μH</td></tr>
+      <tr><td>Indução</td><td class="m">Φ = B·A·cos θ · ε = −N·ΔΦ/Δt · e = −L·ΔI/Δt · W = ½LI² · Us/Up = Ns/Np</td></tr>
+      <tr><td>Grandezas CA</td><td class="m">f = 1/T · ω = 2πf · u = Umáx·sen(ωt + φ) · U = Umáx/√2 · Uméd = (2/π)Umáx · φ = 360°·Δt/T</td></tr>
+      <tr><td>Reatâncias</td><td class="m">XL = 2πfL · XC = 1/(2πfC) · U = Z·I</td></tr>
+      <tr><td>RLC série</td><td class="m">Z = √(R² + (XL − XC)²) · cos φ = R/Z · U = √(UR² + (UL − UC)²)</td></tr>
+      <tr><td>RLC paralelo</td><td class="m">I = √(IR² + (IC − IL)²) · Z = U/I · cos φ = IR/I</td></tr>
+      <tr><td>Ressonância</td><td class="m">f0 = 1/(2π√(LC))</td></tr>
+      <tr><td>Potências</td><td class="m">P = UI cos φ · Q = UI sen φ · S = UI · S² = P² + Q²</td></tr>
+      <tr><td>Compensação</td><td class="m">QC = P(tg φ1 − tg φ2) · C = QC/(ωU²)</td></tr>
+      <tr><td>Trifásico</td><td class="m">U = √3·V · P = √3·U·I·cos φ · Q = √3·U·I·sen φ · S = √3·U·I</td></tr>
+    </tbody></table></div>
+  <div class="tcap">Constantes e valores úteis</div>
+  <div class="tbl"><table>
+    <thead><tr><th>Constante / valor</th><th>Valor</th></tr></thead>
+    <tbody>
+      <tr><td>Carga de 1 C</td><td class="m">≈ 6,25 × 10¹⁸ eletrões</td></tr>
+      <tr><td>Permeabilidade do vazio μ0</td><td class="m">4π × 10⁻⁷ H/m</td></tr>
+      <tr><td>Rede de distribuição em Portugal</td><td class="m">230/400 V, 50 Hz (ω = 314 rad/s)</td></tr>
+      <tr><td>√2 e √3</td><td class="m">1,414 e 1,732</td></tr>
+    </tbody></table></div>
+</section>
+
+<!-- ====================== TESTE PARTE 2 ====================== -->
+<section class="topic" id="teste-2" data-part="2" hidden>
+  <div class="chap-head">
+    <span class="kicker">Parte 2 · Autoavaliação</span>
+    <h2>Teste rápido – Corrente alternada</h2>
+    <p class="lead">Catorze perguntas sobre os capítulos 6 a 11. Escolha uma opção: vê logo se acertou e porquê. A pontuação fica neste dispositivo.</p>
+  </div>
+  <div class="quiz" data-quiz="2"></div>
+</section>
+
+    </main>
+  </div>
+
+  <footer class="foot">
+    <div>UC 1993 · Executar análise de circuitos RLC · Sebenta de apoio – Professor Glauco Barbosa · <span class="mono">Epave.glauco@gmail.com</span><br>EPAVE – Escola Profissional do Alto Ave · 2026/2027</div>
+    <div class="logos"><img src="img/logo-epave.webp" alt="EPAVE – Escola Profissional do Alto Ave" width="111" height="30"><img src="img/cofinanciamento.webp" alt="Cofinanciamento: Pessoas 2030, Portugal 2030 e União Europeia" width="300" height="30"></div>
+  </footer>
+</div>
+<script src="vendor/jspdf.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
