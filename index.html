@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: bancada de laboratório — cabeçalho tipo placa, separadores Parte 1 (CC) / Parte 2 (CA), barra lateral com os capítulos e área de trabalho com teoria, instrumentos (simuladores) e exercícios. Mesma linguagem visual da página Corrente Contínua. */
+/* Layout: bancada de trabalho — cabeçalho tipo placa, separadores Parte 1 (CC) / Parte 2 (CA), barra lateral com os capítulos e área de trabalho com teoria, instrumentos (simuladores) e exercícios. Mesma linguagem visual da página Corrente Contínua. */
 :root{
   --bg:#F1F5FC; --surface:#FFFFFF; --sunk:#EDF2FA; --ink:#13213D; --muted:#55627C; --line:#D2DBEB;
   --accent:#F26B1D; --accent-ink:#B2480A; --accent-soft:#FFE8D7;
@@ -320,7 +320,7 @@ a.vcard .en{color:var(--accent-ink)}
         <li><a href="#cap-10">Potências e fator de potência</a></li>
         <li><a href="#cap-11">Sistemas trifásicos</a></li>
       </ol>
-      <p><a href="#lab">Laboratório</a> · <a href="#videos">Vídeos de apoio</a> · <a href="#formulario">Formulário</a> · <a href="#teste-2">Teste rápido da Parte 2</a></p>
+      <p><a href="#videos">Vídeos de apoio</a> · <a href="#formulario">Formulário</a> · <a href="#teste-2">Teste rápido da Parte 2</a></p>
     </div>
   </div>
   <div class="sec">
@@ -1459,42 +1459,6 @@ a.vcard .en{color:var(--accent-ink)}
       <div class="ain"><span class="in" data-ans="10" data-u="A">IN =</span></div>
       <details><summary>Ver resolução</summary><div class="sol"><div class="c">Ficam duas correntes de 10 A desfasadas de 120°. A soma vetorial tem também 10 A: passa a circular 10 A no neutro. Confirme no simulador acima, pondo uma das resistências a 0 (desligada).</div></div></details></div>
   </div>
-</section>
-
-<!-- ====================== LABORATÓRIO ====================== -->
-<section class="topic" id="lab" data-part="2" hidden>
-  <div class="chap-head">
-    <span class="kicker">Anexo C · Atividades de laboratório</span>
-    <h2>Laboratório</h2>
-    <p class="lead">As duas fichas avaliam os critérios de desempenho «efetuando a análise de ondas com osciloscópio» e «ajustando a configuração para compensação do fator de potência». Cada ficha tem a versão do formando e as notas do professor.</p>
-  </div>
-  <div class="cards">
-    <div class="card p2">
-      <span class="tag" style="color:var(--ca)">Ficha 1 · cerca de 3 h · baixa tensão</span>
-      <h3>Análise de ondas com o osciloscópio</h3>
-      <p><b>Material:</b> osciloscópio de 2 canais, gerador de funções, multímetro, resistência de 1 kΩ e condensador de 100 nF.</p>
-      <ul class="facts">
-        <li><b>Parte A:</b> medir Upp, Umáx, U eficaz e T a 50, 500 e 1000 Hz, e comparar com o multímetro.</li>
-        <li><b>Parte B:</b> sinais sinusoidal, quadrado e triangular com o mesmo Upp: o valor eficaz muda com a forma de onda.</li>
-        <li><b>Parte C:</b> medir o desfasamento num circuito RC a 500, 1000 e 2000 Hz. Prever o ângulo antes de medir.</li>
-      </ul>
-      <p>Treino prévio: <a href="#cap-6">osciloscópio virtual do capítulo 6</a>.</p>
-      <p><a href="https://claude.ai/artifact/NrGtWqcDWN5LSrLTHq8h49">Abrir a Ficha 1</a></p>
-    </div>
-    <div class="card p2">
-      <span class="tag" style="color:var(--ca)">Ficha 2 · cerca de 3 h · 230 V</span>
-      <h3>Compensação do fator de potência</h3>
-      <p><b>Material:</b> bancada com diferencial de 30 mA, carga indutiva (luminária fluorescente de 36 W com balastro ferromagnético), analisador de energia e condensadores de 2, 4,5 e 8 μF.</p>
-      <ul class="facts">
-        <li><b>Parte A:</b> medir P, I e cos φ da carga sem compensação.</li>
-        <li><b>Parte B:</b> calcular QC e a capacidade C necessária.</li>
-        <li><b>Parte C:</b> ensaiar os escalões de 0 a 8 μF e escolher o que dá cos φ ≥ 0,95 sem sobrecompensar.</li>
-      </ul>
-      <p>Treino prévio: <a href="#cap-10">calculadora de compensação do capítulo 10</a>.</p>
-      <p><a href="https://claude.ai/artifact/YBvUTRH2UZmQWfqFeUg74j">Abrir a Ficha 2</a></p>
-    </div>
-  </div>
-  <div class="note danger"><b>Segurança na Ficha 2.</b> Todas as ligações se fazem sem tensão; é o professor quem liga o circuito. Os condensadores são descarregados no fim, como na <a href="#cap-2">secção 2.6</a>. Leia-se o cos φ (DPF) do analisador e não o PF: a lâmpada fluorescente produz harmónicos que os condensadores não corrigem.</div>
 </section>
 
 <!-- ====================== VÍDEOS ====================== -->
