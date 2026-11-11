@@ -757,7 +757,7 @@ TOOLS.estrela = (p, id) => {
 /* ================= navegação, exercícios e testes ================= */
 const NAV = {
   1: [['inicio', '·', 'Apresentação'], ['cap-1', '1', 'Fundamentos'], ['cap-2', '2', 'Condensadores'], ['cap-3', '3', 'Magnetismo'], ['cap-4', '4', 'Indução'], ['cap-5', '5', 'Bobines'], ['videos', '▶', 'Vídeos de apoio'], ['formulario', 'Σ', 'Formulário'], ['teste-1', '✓', 'Teste rápido']],
-  2: [['inicio', '·', 'Apresentação'], ['cap-6', '6', 'CA sinusoidal'], ['cap-7', '7', 'R, L e C em CA'], ['cap-8', '8', 'RLC série e paralelo'], ['cap-9', '9', 'Ressonância'], ['cap-10', '10', 'Potências'], ['cap-11', '11', 'Trifásico'], ['lab', 'L', 'Laboratório'], ['videos', '▶', 'Vídeos de apoio'], ['formulario', 'Σ', 'Formulário'], ['teste-2', '✓', 'Teste rápido']]
+  2: [['inicio', '·', 'Apresentação'], ['cap-6', '6', 'CA sinusoidal'], ['cap-7', '7', 'R, L e C em CA'], ['cap-8', '8', 'RLC série e paralelo'], ['cap-9', '9', 'Ressonância'], ['cap-10', '10', 'Potências'], ['cap-11', '11', 'Trifásico'], ['videos', '▶', 'Vídeos de apoio'], ['formulario', 'Σ', 'Formulário'], ['teste-2', '✓', 'Teste rápido']]
 };
 const QUIZ = {
   1: [
