@@ -269,6 +269,10 @@ a.vcard .en{color:var(--accent-ink)}
 }
 @media (max-width:420px){.rng{grid-template-columns:minmax(0,1fr) 6em}.rng input[type=range]{grid-column:1/-1;grid-row:2}}
 @media (prefers-reduced-motion:no-preference){section.topic:not([hidden]){animation:in .22s ease-out}@keyframes in{from{transform:translateY(4px)}to{transform:none}}}
+.testbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;margin:-8px 0 22px;padding:12px 18px;border-radius:12px;border:1px solid var(--accent);background:var(--accent-soft)}
+.testbar .t{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--ink)}
+.testbar .d{font-size:.88rem;color:var(--muted)}
+.testbar .btn{font-size:1rem;padding:9px 18px}
 </style>
 </head>
 <body data-part="1">
@@ -285,6 +289,11 @@ a.vcard .en{color:var(--accent-ink)}
   <div class="parts" role="group" aria-label="Partes da UC">
     <button type="button" data-part="1" aria-pressed="true"><span class="k">Parte 1 · cap. 1–5</span><span class="t">Corrente contínua</span><span class="d">Fundamentos, condensadores, magnetismo, indução e bobines</span></button>
     <button type="button" data-part="2" aria-pressed="false"><span class="k">Parte 2 · cap. 6–11</span><span class="t">Corrente alternada</span><span class="d">Sinusoide, R L C, RLC, ressonância, potências e trifásico</span></button>
+  </div>
+
+  <div class="testbar">
+    <div><div class="t">Teste: identificação de componentes</div><div class="d">Resistências, condensadores cerâmicos e eletrolíticos, bobinas e fontes CC e CA · 20 perguntas</div></div>
+    <a class="btn" href="teste-componentes.html">Fazer o teste →</a>
   </div>
 
   <div class="layout">
