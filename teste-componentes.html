@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Teste UC 1993 · Identificação de componentes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F1F5FC; --surface:#FFFFFF; --sunk:#EDF2FA; --ink:#13213D; --muted:#55627C; --line:#D2DBEB;
+  --accent:#F26B1D; --accent-ink:#B2480A; --accent-soft:#FFE8D7;
+  --pcb:#1D6FE0; --pcb-soft:#E0ECFD; --ok:#178A4A; --ok-soft:#DDF4E6; --bad:#C62828; --bad-soft:#FBE3E1;
+  --hero:#0D2A5E; --hero-2:#123B80; --hero-ink:#FFFFFF; --hero-muted:#B7C8EA; --spark:#FFC247;
+  --lcd:#0A1A33; --lcd-ink:#62F0D6; --lcd-2:#FFC247; --lcd-grid:rgba(98,240,214,.16);
+  --fig:#F7F9FD;
+  --display:"Familjen Grotesk","Arial Narrow",Arial,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1324; --surface:#121F3A; --sunk:#0E1930; --ink:#E7EDF8; --muted:#9BA9C4; --line:#253658;
+  --accent:#FF8F45; --accent-ink:#FFB27D; --accent-soft:#3B2412;
+  --pcb:#5EA4FF; --pcb-soft:#16305A; --ok:#5FD392; --ok-soft:#123323; --bad:#FF8A80; --bad-soft:#3D1A1A;
+  --hero:#0A1E45; --hero-2:#11306A; --fig:#E9EEF7; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1324; --surface:#121F3A; --sunk:#0E1930; --ink:#E7EDF8; --muted:#9BA9C4; --line:#253658;
+  --accent:#FF8F45; --accent-ink:#FFB27D; --accent-soft:#3B2412;
+  --pcb:#5EA4FF; --pcb-soft:#16305A; --ok:#5FD392; --ok-soft:#123323; --bad:#FF8A80; --bad-soft:#3D1A1A;
+  --hero:#0A1E45; --hero-2:#11306A; --fig:#E9EEF7; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--body);font-size:17px;line-height:1.55;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+.hero{background:linear-gradient(135deg,var(--hero),var(--hero-2));color:var(--hero-ink)}
+.hero .in{max-width:880px;margin:0 auto;padding:28px 18px 26px;display:flex;flex-direction:column;gap:10px}
+.hero .k{font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--spark)}
+.hero h1{font-size:clamp(1.8rem,4.5vw,2.6rem)}
+.hero p{color:var(--hero-muted);max-width:60ch}
+.wrap{max-width:880px;margin:0 auto;padding:22px 18px 60px;display:flex;flex-direction:column;gap:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.rules{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld label{font-size:.85rem;color:var(--muted);font-weight:700}
+input[type=text]{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--sunk);color:var(--ink);min-width:0}
+input:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn{font:inherit;font-weight:700;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:10px 18px;border-radius:8px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.secthead{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.secthead .k{font-family:var(--mono);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink)}
+.secthead h2{font-size:1.5rem}
+.secthead p{color:var(--muted)}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:640px){.q{grid-template-columns:1fr}}
+.q.noimg{grid-template-columns:1fr}
+.fig{background:var(--fig);border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.fig svg{width:100%;height:auto;display:block}
+.fig small{font-family:var(--mono);font-size:.75rem;color:#55627C}
+.qbody{display:flex;flex-direction:column;gap:10px}
+.qt{font-weight:700}
+.qt .n{font-family:var(--mono);color:var(--pcb);margin-right:6px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button{font:inherit;text-align:left;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--sunk);color:var(--ink);cursor:pointer;display:flex;gap:10px;align-items:baseline}
+.opts button .l{font-family:var(--mono);font-weight:600;color:var(--muted)}
+.opts button[aria-pressed="true"]{border-color:var(--pcb);background:var(--pcb-soft);box-shadow:inset 0 0 0 1px var(--pcb)}
+.opts button[aria-pressed="true"] .l{color:var(--pcb)}
+.opts button:disabled{cursor:default}
+.opts button.right{border-color:var(--ok);background:var(--ok-soft)}
+.opts button.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opts button.right[aria-pressed],.opts button.wrong[aria-pressed]{box-shadow:none}
+.opts button.right[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--ok)}
+.opts button.wrong[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--bad)}
+.why{font-size:.93rem;color:var(--muted);border-left:3px solid var(--line);padding-left:10px}
+.why b{color:var(--ink)}
+.bar{position:sticky;top:0;z-index:5;background:var(--ink);color:var(--bg);padding:9px 18px;font-size:.92rem;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.bar b{font-family:var(--mono)}
+.result{border-color:var(--accent);background:var(--accent-soft)}
+.result .big{font-family:var(--display);font-size:2.2rem;font-weight:700;color:var(--accent-ink)}
+.fb{font-size:.95rem;font-weight:700}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
+.foot{color:var(--muted);font-size:.85rem;text-align:center}
+</style>
+</head>
+<body>
+<header class="hero"><div class="in">
+  <span class="k">UC 1993 · Executar análise de circuitos RLC · EPAVE</span>
+  <h1>Teste: identificação de componentes</h1>
+  <p>Resistências, condensadores cerâmicos e eletrolíticos, bobinas e fontes de tensão contínua e alternada: reconhecer o componente real, o símbolo e o sinal que produz.</p>
+</div></header>
+<div class="bar" id="bar"><span>Respondidas: <b id="cnt">0 / 20</b></span><span id="who-bar"></span></div>
+<main class="wrap">
+  <section class="panel" id="intro">
+    <h2 style="font-size:1.35rem">Antes de começar</h2>
+    <ul class="rules">
+      <li>O teste tem <b>20 perguntas</b> de escolha múltipla, em três partes: componentes reais, símbolos e sinais e marcações.</li>
+      <li>Cada pergunta tem uma só resposta certa e vale 1 valor. Pode mudar a resposta até entregar.</li>
+      <li>Quando carregar em <b>«Entregar o teste»</b>, a nota e a correção aparecem, e o teste segue para o professor por email.</li>
+      <li>Depois de entregue, as respostas já não podem ser alteradas.</li>
+    </ul>
+    <div class="row">
+      <div class="fld" style="flex:1 1 16em"><label for="nome">Nome completo</label><input type="text" id="nome" autocomplete="name"></div>
+      <div class="fld"><label for="num">Número</label><input type="text" id="num" inputmode="numeric" style="width:6em"></div>
+      <div class="fld"><label for="turma">Turma</label><input type="text" id="turma" style="width:7em"></div>
+    </div>
+  </section>
+
+  <div id="test"></div>
+
+  <section class="panel" id="entrega">
+    <h2 style="font-size:1.35rem">Entregar</h2>
+    <p style="color:var(--muted)">Confirme que respondeu a todas as perguntas e que o nome, o número e a turma estão preenchidos.</p>
+    <div class="row"><button type="button" class="btn primary" id="go">Entregar o teste</button></div>
+    <div class="fb" id="fb0" role="status"></div>
+  </section>
+
+  <section class="panel result" id="result" hidden>
+    <span class="secthead"><span class="k">Resultado</span></span>
+    <div class="big" id="nota"></div>
+    <p id="nota-txt"></p>
+    <p style="color:var(--muted)">A correção está em cada pergunta: a verde a resposta certa, a vermelho a sua resposta quando está errada.</p>
+    <div class="row"><button type="button" class="btn primary" id="send">Enviar ao professor</button><button type="button" class="btn" id="pdf">Descarregar PDF</button></div>
+    <div class="fb" id="fb" role="status"></div>
+  </section>
+  <p class="foot">Professor Glauco Barbosa · Epave.glauco@gmail.com · EPAVE</p>
+</main>
+
+<script src="vendor/jspdf.umd.min.js"></script>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const ENVIO_URL = 'https://formsubmit.co/ajax/epave.glauco@gmail.com';
+const EMAIL_PROF = 'Epave.glauco@gmail.com';
+const NOME_TESTE = 'Teste – Identificação de componentes';
+const KEY = 'uc1993-teste-componentes';
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(KEY + ':' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(KEY + ':' + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- figuras (SVG) ---------- */
+const INK = '#13213D', LEAD = '#8C96A3';
+const svg = (inner, vb = '0 0 260 160') => `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img">${inner}</svg>`;
+const sym = inner => svg(`<g fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${inner}</g>`);
+const grad = (id, a, b, c) => `<linearGradient id="${id}" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="${a}"/><stop offset=".45" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient>`;
+const gradV = (id, a, b, c) => `<linearGradient id="${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".45" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient>`;
+
+const FIG = {
+  ceramico: svg(`<defs><radialGradient id="cg" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#F2A65A"/><stop offset="1" stop-color="#B8641E"/></radialGradient></defs>
+    <path d="M114 104 L106 156" stroke="${LEAD}" stroke-width="3.5"/><path d="M146 104 L154 156" stroke="${LEAD}" stroke-width="3.5"/>
+    <ellipse cx="130" cy="62" rx="50" ry="48" fill="url(#cg)" stroke="#8E4A12" stroke-width="2"/>
+    <path d="M100 100 Q130 116 160 100" fill="#B8641E" stroke="#8E4A12" stroke-width="2"/>
+    <text x="130" y="72" font-family="JetBrains Mono,monospace" font-size="26" font-weight="600" text-anchor="middle" fill="#3B2208">104</text>`),
+  ceramico473: svg(`<defs><radialGradient id="cg2" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#F2A65A"/><stop offset="1" stop-color="#B8641E"/></radialGradient></defs>
+    <path d="M114 104 L106 156" stroke="${LEAD}" stroke-width="3.5"/><path d="M146 104 L154 156" stroke="${LEAD}" stroke-width="3.5"/>
+    <ellipse cx="130" cy="62" rx="50" ry="48" fill="url(#cg2)" stroke="#8E4A12" stroke-width="2"/>
+    <text x="130" y="72" font-family="JetBrains Mono,monospace" font-size="26" font-weight="600" text-anchor="middle" fill="#3B2208">473</text>`),
+  eletrolitico: svg(`<defs>${grad('eg', '#163E86', '#2F6BD1', '#123270')}${grad('es', '#AEB9C9', '#E8EDF4', '#A3AEBF')}</defs>
+    <path d="M115 128 V158" stroke="${LEAD}" stroke-width="3.5"/><path d="M145 128 V146" stroke="${LEAD}" stroke-width="3.5"/>
+    <rect x="92" y="12" width="76" height="118" rx="10" fill="url(#eg)"/>
+    <rect x="146" y="12" width="18" height="118" fill="url(#es)" opacity=".95"/>
+    <g fill="#1B2B4A" font-family="Arial,sans-serif" font-weight="700" font-size="16" text-anchor="middle"><text x="155" y="40">−</text><text x="155" y="64">−</text><text x="155" y="88">−</text><text x="155" y="112">−</text></g>
+    <g fill="#fff" font-family="Arial,sans-serif" font-weight="700" text-anchor="middle"><text x="118" y="62" font-size="15">470μF</text><text x="118" y="84" font-size="15">25V</text></g>
+    <ellipse cx="130" cy="16" rx="38" ry="6" fill="#C9D2DF"/><path d="M116 16 H144 M130 12 V20" stroke="#8C96A3" stroke-width="1.5"/>`),
+  eletroliticoAB: svg(`<defs>${grad('eg3', '#163E86', '#2F6BD1', '#123270')}${grad('es3', '#AEB9C9', '#E8EDF4', '#A3AEBF')}</defs>
+    <path d="M115 118 V150" stroke="${LEAD}" stroke-width="3.5"/><path d="M145 118 V136" stroke="${LEAD}" stroke-width="3.5"/>
+    <rect x="92" y="6" width="76" height="114" rx="10" fill="url(#eg3)"/>
+    <rect x="146" y="6" width="18" height="114" fill="url(#es3)"/>
+    <g fill="#1B2B4A" font-family="Arial,sans-serif" font-weight="700" font-size="16" text-anchor="middle"><text x="155" y="34">−</text><text x="155" y="58">−</text><text x="155" y="82">−</text><text x="155" y="106">−</text></g>
+    <g fill="#fff" font-family="Arial,sans-serif" font-weight="700" text-anchor="middle"><text x="118" y="56" font-size="15">100μF</text><text x="118" y="78" font-size="15">16V</text></g>
+    <g font-family="JetBrains Mono,monospace" font-weight="600" font-size="18" fill="${INK}"><text x="88" y="152">A</text><text x="158" y="140">B</text></g>`),
+  resistor: svg(`<defs>${gradV('rg', '#F0DDBB', '#DCC193', '#B99B6B')}</defs>
+    <path d="M8 80 H70 M190 80 H252" stroke="${LEAD}" stroke-width="3.5"/>
+    <path d="M70 62 Q70 54 80 54 H96 Q102 60 110 60 H150 Q158 60 164 54 H180 Q190 54 190 62 V98 Q190 106 180 106 H164 Q158 100 150 100 H110 Q102 100 96 106 H80 Q70 106 70 98 Z" fill="url(#rg)" stroke="#9C7F52" stroke-width="1.5"/>
+    <rect x="84" y="54" width="9" height="52" fill="#7B4A1E"/><rect x="110" y="60" width="9" height="40" fill="#1A1A1A"/>
+    <rect x="128" y="60" width="9" height="40" fill="#D32F2F"/><rect x="166" y="54" width="9" height="52" fill="#C9A227"/>`),
+  bobinaFerrite: svg(`<defs>${gradV('fg', '#5A606A', '#3A3F47', '#24282E')}${gradV('cu', '#F0B27A', '#C8732E', '#8A4A16')}</defs>
+    <rect x="30" y="64" width="200" height="32" rx="6" fill="url(#fg)"/>
+    <g fill="none" stroke="url(#cu)" stroke-width="7" stroke-linecap="round">${Array.from({ length: 13 }, (_, i) => `<path d="M${62 + i * 11} 58 Q${70 + i * 11} 80 ${62 + i * 11} 102"/>`).join('')}</g>
+    <path d="M62 58 Q46 40 24 34 M194 102 Q214 122 236 128" fill="none" stroke="#C8732E" stroke-width="3.5"/>`),
+  toroide: svg(`<defs><radialGradient id="tg" cx=".5" cy=".5" r=".5"><stop offset=".55" stop-color="#2B3038"/><stop offset=".8" stop-color="#4E555F"/><stop offset="1" stop-color="#2B3038"/></radialGradient></defs>
+    <circle cx="130" cy="74" r="56" fill="none" stroke="url(#tg)" stroke-width="30"/>
+    <g stroke="#C8732E" stroke-width="4" stroke-linecap="round">${Array.from({ length: 28 }, (_, i) => { const a = (i / 28) * 2 * Math.PI + 0.25, c = Math.cos(a), s = Math.sin(a); return `<line x1="${(130 + 38 * c).toFixed(1)}" y1="${(74 + 38 * s).toFixed(1)}" x2="${(130 + 74 * c).toFixed(1)}" y2="${(74 + 74 * s).toFixed(1)}"/>`; }).join('')}</g>
+    <path d="M112 140 V158 M148 140 V158" stroke="#C8732E" stroke-width="3.5"/>`),
+  pilha: svg(`<defs>${gradV('pg', '#3A3F47', '#1E2228', '#0F1216')}${gradV('pc', '#E8EDF4', '#B7C0CD', '#8892A0')}${gradV('pl', '#F7C948', '#E0A100', '#A87700')}</defs>
+    <rect x="34" y="50" width="16" height="60" rx="3" fill="url(#pc)"/>
+    <rect x="48" y="40" width="168" height="80" rx="8" fill="url(#pg)"/>
+    <rect x="160" y="40" width="56" height="80" fill="url(#pl)"/>
+    <rect x="216" y="66" width="14" height="28" rx="3" fill="url(#pc)"/>
+    <text x="104" y="90" font-family="Arial,sans-serif" font-weight="700" font-size="24" text-anchor="middle" fill="#fff">1,5 V</text>
+    <text x="188" y="92" font-family="Arial,sans-serif" font-weight="700" font-size="30" text-anchor="middle" fill="#1A1A1A">+</text>
+    <text x="130" y="146" font-family="JetBrains Mono,monospace" font-size="13" text-anchor="middle" fill="#55627C">tamanho AA</text>`),
+  fonteBancada: svg(`<defs>${gradV('bb', '#DDE3EC', '#C3CCD8', '#A8B3C2')}</defs>
+    <rect x="16" y="14" width="228" height="132" rx="8" fill="url(#bb)" stroke="#8C96A3" stroke-width="1.5"/>
+    <rect x="30" y="28" width="120" height="58" rx="4" fill="#0A1A33"/>
+    <text x="90" y="56" font-family="JetBrains Mono,monospace" font-weight="600" font-size="22" text-anchor="middle" fill="#62F0D6">12.00 V</text>
+    <text x="90" y="78" font-family="JetBrains Mono,monospace" font-size="15" text-anchor="middle" fill="#FFC247">0.50 A</text>
+    <circle cx="186" cy="44" r="15" fill="#3A3F47"/><circle cx="222" cy="44" r="11" fill="#3A3F47"/>
+    <text x="186" y="74" font-family="Arial,sans-serif" font-size="11" text-anchor="middle" fill="#13213D">VOLTAGE</text>
+    <text x="40" y="112" font-family="Arial,sans-serif" font-weight="700" font-size="14" fill="#13213D">DC POWER SUPPLY</text>
+    <circle cx="186" cy="118" r="12" fill="#D32F2F" stroke="#8E1C1C" stroke-width="2"/><circle cx="222" cy="118" r="12" fill="#1A1A1A" stroke="#000" stroke-width="2"/>
+    <text x="186" y="101" font-family="Arial,sans-serif" font-weight="700" font-size="14" text-anchor="middle" fill="#13213D">+</text><text x="222" y="101" font-family="Arial,sans-serif" font-weight="700" font-size="14" text-anchor="middle" fill="#13213D">−</text>`),
+  tomada: svg(`<rect x="70" y="10" width="120" height="120" rx="18" fill="#FBFCFE" stroke="#B7C0CD" stroke-width="2"/>
+    <circle cx="130" cy="70" r="44" fill="#E4E9F0" stroke="#B7C0CD" stroke-width="2"/>
+    <circle cx="108" cy="70" r="7" fill="#2B3038"/><circle cx="152" cy="70" r="7" fill="#2B3038"/>
+    <rect x="122" y="24" width="16" height="9" rx="2" fill="#A8B3C2"/><rect x="122" y="107" width="16" height="9" rx="2" fill="#A8B3C2"/>
+    <text x="130" y="152" font-family="JetBrains Mono,monospace" font-weight="600" font-size="14" text-anchor="middle" fill="#13213D">230 V ~ 50 Hz</text>`),
+  gerador: svg(`<defs>${gradV('gb', '#DDE3EC', '#C3CCD8', '#A8B3C2')}</defs>
+    <rect x="16" y="14" width="228" height="132" rx="8" fill="url(#gb)" stroke="#8C96A3" stroke-width="1.5"/>
+    <rect x="30" y="28" width="132" height="66" rx="4" fill="#0A1A33"/>
+    <path d="${Array.from({ length: 61 }, (_, i) => `${i ? 'L' : 'M'}${(36 + i * 2).toFixed(1)} ${(61 - 22 * Math.sin(i / 60 * 4 * Math.PI)).toFixed(1)}`).join(' ')}" fill="none" stroke="#62F0D6" stroke-width="2.5"/>
+    <text x="40" y="118" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#13213D">FUNCTION GENERATOR</text>
+    <text x="40" y="136" font-family="JetBrains Mono,monospace" font-size="12" fill="#13213D">1.000 kHz</text>
+    <circle cx="204" cy="50" r="18" fill="#3A3F47"/><circle cx="210" cy="120" r="12" fill="#1A1A1A" stroke="#000" stroke-width="2"/>
+    <text x="210" y="100" font-family="Arial,sans-serif" font-size="11" text-anchor="middle" fill="#13213D">OUTPUT</text>`),
+  /* símbolos */
+  sRes: sym(`<path d="M20 80 H80 M180 80 H240"/><rect x="80" y="62" width="100" height="36" rx="1"/>`),
+  sCap: sym(`<path d="M20 80 H118 M142 80 H240 M118 40 V120 M142 40 V120"/>`),
+  sCapPol: sym(`<path d="M20 80 H118 M136 80 H240 M118 40 V120"/><path d="M146 40 Q132 80 146 120"/><path d="M96 46 H110 M103 39 V53" stroke-width="3"/>`),
+  sInd: sym(`<path d="M20 80 H60 a17.5 17.5 0 0 1 35 0 a17.5 17.5 0 0 1 35 0 a17.5 17.5 0 0 1 35 0 a17.5 17.5 0 0 1 35 0 H240"/>`),
+  sIndNucleo: sym(`<path d="M20 90 H60 a17.5 17.5 0 0 1 35 0 a17.5 17.5 0 0 1 35 0 a17.5 17.5 0 0 1 35 0 a17.5 17.5 0 0 1 35 0 H240"/><path d="M60 54 H200 M60 44 H200" stroke-width="3.5"/>`),
+  sCC: sym(`<path d="M20 80 H118 M138 80 H240 M118 36 V124"/><path d="M138 58 V102" stroke-width="9"/><path d="M92 40 H106 M99 33 V47" stroke-width="3"/><path d="M152 40 H166" stroke-width="3"/>`),
+  sCA: sym(`<path d="M20 80 H90 M170 80 H240"/><circle cx="130" cy="80" r="40"/><path d="M106 80 C114 58 122 58 130 80 S146 102 154 80" stroke-width="3.5"/>`),
+  /* sinais no osciloscópio */
+  oscCC: osc(x => 0.55),
+  oscCA: osc(x => 0.75 * Math.sin(x * 4 * Math.PI))
+};
+function osc(fn) {
+  let g = '';
+  for (let i = 0; i <= 10; i++) g += `<line x1="${10 + i * 24}" y1="12" x2="${10 + i * 24}" y2="148" stroke="rgba(98,240,214,${i === 5 ? .35 : .15})"/>`;
+  for (let j = 0; j <= 8; j++) g += `<line x1="10" y1="${12 + j * 17}" x2="250" y2="${12 + j * 17}" stroke="rgba(98,240,214,${j === 4 ? .35 : .15})"/>`;
+  const d = Array.from({ length: 121 }, (_, i) => `${i ? 'L' : 'M'}${(10 + i * 2).toFixed(1)} ${(80 - 60 * fn(i / 120)).toFixed(1)}`).join(' ');
+  return svg(`<rect x="0" y="0" width="260" height="160" rx="8" fill="#0A1A33"/>${g}<path d="${d}" fill="none" stroke="#FFC247" stroke-width="3"/><text x="16" y="28" font-family="JetBrains Mono,monospace" font-size="11" fill="#62F0D6">CH1 5 V/div · 5 ms/div</text>`);
+}
+
+/* ---------- perguntas ---------- */
+const CER = 'Condensador cerâmico (não polarizado)', ELE = 'Condensador eletrolítico (polarizado)', RES = 'Resistência (resistor)',
+  IND = 'Bobina (indutor)', FCC = 'Fonte de tensão contínua (CC)', FCA = 'Fonte de tensão alternada (CA)';
+const PARTES = [
+  { k: 'Parte A', t: 'Componentes reais', d: 'Observe a figura e identifique o componente.' },
+  { k: 'Parte B', t: 'Símbolos', d: 'Identifique o componente representado por cada símbolo, como aparece nos esquemas da sebenta.' },
+  { k: 'Parte C', t: 'Sinais e marcações', d: 'Leia o que está marcado no componente ou o que se vê no ecrã do osciloscópio.' }
+];
+// p: parte; f: figura; q: pergunta; o: opções (a primeira é a certa); w: explicação
+const Q = [
+  { p: 0, f: 'ceramico', q: 'Que componente é este?', o: [CER, ELE, RES, IND], w: 'Disco pequeno, sem marca de polaridade, com o código de 3 dígitos impresso: é um condensador cerâmico. Tem pequenos valores e usa-se em altas frequências (sebenta, 2.1).' },
+  { p: 0, f: 'eletrolitico', q: 'Que componente é este?', o: [ELE, CER, FCC, IND], w: 'Corpo cilíndrico com a capacidade e a tensão máxima marcadas (470 μF / 25 V) e uma faixa com sinais «−»: é um condensador eletrolítico, que é polarizado (sebenta, 2.1).' },
+  { p: 0, f: 'resistor', q: 'Que componente é este?', o: [RES, IND, CER, ELE], w: 'Corpo com anéis de cor: é uma resistência. Os anéis indicam o valor e a tolerância pelo código de cores (sebenta, capítulo 1).' },
+  { p: 0, f: 'bobinaFerrite', q: 'Que componente é este?', o: [IND, RES, ELE, FCA], w: 'Fio de cobre enrolado sobre um núcleo de ferrite: é uma bobina (indutor). Armazena energia no campo magnético (sebenta, 5.1).' },
+  { p: 0, f: 'toroide', q: 'Que componente é este?', o: [IND, CER, RES, FCA], w: 'Fio enrolado num núcleo em forma de anel: é uma bobina toroidal. O campo fecha-se no núcleo, com pouca dispersão (sebenta, 5.3).' },
+  { p: 0, f: 'pilha', q: 'Que componente é este?', o: [FCC, FCA, ELE, RES], w: 'Uma pilha tem polos + e − fixos e fornece tensão de valor e sentido constantes: é uma fonte de tensão contínua (sebenta, 1 e 6.1).' },
+  { p: 0, f: 'fonteBancada', q: 'Este aparelho de bancada é…', o: [FCC, FCA, IND, RES], w: 'Fonte de alimentação DC: tem terminais + (vermelho) e − (preto) e fornece uma tensão contínua regulável, aqui 12 V.' },
+  { p: 0, f: 'tomada', q: 'A tomada da instalação elétrica é…', o: [FCA, FCC, ELE, IND], w: 'A rede fornece 230 V a 50 Hz: a tensão muda de sentido periodicamente, por isso é uma fonte de tensão alternada (sebenta, 6.1).' },
+  { p: 0, f: 'gerador', q: 'Este gerador de funções, a produzir o sinal que se vê no ecrã, funciona como…', o: [FCA, FCC, CER, RES], w: 'O sinal é uma sinusoide de 1 kHz: o gerador de funções é aqui uma fonte de tensão alternada (sebenta, 6.2).' },
+
+  { p: 1, f: 'sRes', q: 'Que componente representa este símbolo?', o: [RES, IND, CER, FCC], w: 'O retângulo é o símbolo normalizado (IEC) da resistência.' },
+  { p: 1, f: 'sCap', q: 'Que componente representa este símbolo?', o: [CER, ELE, FCC, RES], w: 'Duas placas paralelas iguais, sem sinal +: condensador não polarizado, como o cerâmico.' },
+  { p: 1, f: 'sCapPol', q: 'Que componente representa este símbolo?', o: [ELE, CER, FCC, IND], w: 'Uma placa curva e o sinal + junto da outra: condensador polarizado (eletrolítico). Tem de se respeitar a polaridade.' },
+  { p: 1, f: 'sInd', q: 'Que componente representa este símbolo?', o: [IND, RES, FCA, CER], w: 'Os arcos seguidos representam as espiras: é o símbolo da bobina (indutor).' },
+  { p: 1, f: 'sIndNucleo', q: 'Este símbolo representa…', o: ['Uma bobina com núcleo de ferro', 'Um condensador eletrolítico', 'Uma resistência variável', 'Uma fonte de tensão alternada'], w: 'Os traços paralelos por cima das espiras indicam um núcleo de ferro (ferromagnético) (sebenta, 5.3).' },
+  { p: 1, f: 'sCC', q: 'Que componente representa este símbolo?', o: [FCC, ELE, CER, FCA], w: 'Traço longo (+) e traço curto e grosso (−): é o símbolo da pilha ou fonte de tensão contínua.' },
+  { p: 1, f: 'sCA', q: 'Que componente representa este símbolo?', o: [FCA, FCC, IND, RES], w: 'Círculo com uma sinusoide (~) no interior: fonte de tensão alternada.' },
+
+  { p: 2, f: 'eletroliticoAB', q: 'Qual é o terminal negativo deste condensador eletrolítico?', o: ['B: está do lado da faixa com os sinais «−» e é a perna mais curta', 'A: é a perna mais comprida', 'Qualquer um: este condensador não tem polaridade', 'Não é possível saber sem um multímetro'], w: 'No eletrolítico, o terminal negativo fica do lado da faixa marcada com «−» e é a perna mais curta. A perna mais comprida é o +.' },
+  { p: 2, f: 'ceramico473', q: 'Qual é a capacidade deste condensador cerâmico?', o: ['47 nF', '473 pF', '4,7 μF', '473 nF'], w: 'Código de 3 dígitos em pF: 47 seguido de 3 zeros = 47 000 pF = 47 nF (sebenta, 2.1).' },
+  { p: 2, f: 'oscCC', q: 'Este sinal foi medido aos terminais de uma fonte. Que tipo de fonte é?', o: [FCC, FCA, 'Uma bobina em curto-circuito', 'Um condensador a descarregar'], w: 'Uma linha horizontal: o valor e o sentido não mudam com o tempo. É uma tensão contínua.' },
+  { p: 2, f: 'oscCA', q: 'Este sinal foi medido aos terminais de uma fonte. Que tipo de fonte é?', o: [FCA, FCC, 'Uma resistência', 'Um condensador carregado'], w: 'A tensão é sinusoidal e muda de sentido em cada meio período: é uma tensão alternada (sebenta, 6.2).' }
+];
+
+/* ---------- estado ---------- */
+function shuffle(a, seed) { let s = seed >>> 0; const r = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+let st = store.get('st', null);
+if (!st || !st.ord || st.ord.length !== Q.length) {
+  const seed = Math.floor(Math.random() * 1e9);
+  st = { seed, ord: Q.map((x, i) => shuffle([0, 1, 2, 3], seed + i * 7919)), ans: {}, done: false, score: 0, fim: null, sent: false };
+}
+const save = () => store.set('st', st);
+const who0 = store.get('aluno', { nome: '', num: '', turma: '' });
+$('#nome').value = who0.nome; $('#num').value = who0.num; $('#turma').value = who0.turma;
+
+/* ---------- desenho do teste ---------- */
+function render() {
+  let h = '', last = -1;
+  Q.forEach((x, i) => {
+    if (x.p !== last) { last = x.p; const P = PARTES[x.p]; h += `<div class="secthead"><span class="k">${P.k}</span><h2>${P.t}</h2><p>${P.d}</p></div>`; }
+    const ord = st.ord[i];
+    h += `<article class="q" data-i="${i}"><div class="fig">${FIG[x.f]}<small>Figura ${i + 1}</small></div>
+      <div class="qbody"><p class="qt"><span class="n">${i + 1}.</span>${x.q}</p>
+      <div class="opts" role="group" aria-label="Opções da pergunta ${i + 1}">${ord.map((j, k) => `<button type="button" data-j="${j}" aria-pressed="${st.ans[i] === j}"><span class="l">${'ABCD'[k]})</span><span>${x.o[j]}</span></button>`).join('')}</div>
+      <p class="why" hidden></p></div></article>`;
+  });
+  $('#test').innerHTML = h;
+  document.querySelectorAll('.q').forEach(el => {
+    const i = +el.dataset.i;
+    el.querySelectorAll('.opts button').forEach(b => b.addEventListener('click', () => {
+      if (st.done) return;
+      st.ans[i] = +b.dataset.j; save();
+      el.querySelectorAll('.opts button').forEach(c => c.setAttribute('aria-pressed', c === b));
+      count();
+    }));
+  });
+  count();
+  if (st.done) showResult();
+}
+function count() { $('#cnt').textContent = `${Object.keys(st.ans).length} / ${Q.length}`; }
+const getWho = () => { const w = { nome: $('#nome').value.trim(), num: $('#num').value.trim(), turma: $('#turma').value.trim() }; store.set('aluno', w); return w; };
+const nf = (v, d = 1) => v.toLocaleString('pt-PT', { minimumFractionDigits: 0, maximumFractionDigits: d });
+const letter = (i, j) => 'ABCD'[st.ord[i].indexOf(j)];
+
+function showResult() {
+  ['nome', 'num', 'turma'].forEach(id => $('#' + id).disabled = true);
+  $('#entrega').hidden = true; $('#result').hidden = false;
+  $('#nota').textContent = `${nf(st.score)} / 20 valores`;
+  $('#nota-txt').textContent = `${st.score} respostas certas em ${Q.length} · entregue a ${new Date(st.fim).toLocaleString('pt-PT')}`;
+  const w = st.who; $('#who-bar').textContent = `${w.nome} · n.º ${w.num} · ${w.turma}`;
+  document.querySelectorAll('.q').forEach(el => {
+    const i = +el.dataset.i, a = st.ans[i];
+    el.querySelectorAll('.opts button').forEach(b => { const j = +b.dataset.j; b.disabled = true; if (j === 0) b.classList.add('right'); else if (j === a) b.classList.add('wrong'); });
+    const why = el.querySelector('.why'); why.hidden = false;
+    why.innerHTML = `<b>${a === 0 ? '✓ Certa.' : '✗ Errada.'}</b> ${Q[i].w}`;
+  });
+}
+
+$('#go').addEventListener('click', () => {
+  const fb = $('#fb0'); const falta = Q.length - Object.keys(st.ans).length;
+  const w = getWho();
+  if (!w.nome || !w.num || !w.turma) { fb.className = 'fb bad'; fb.textContent = 'Preencha o nome, o número e a turma (no início da página).'; $('#nome').focus(); return; }
+  if (falta) { fb.className = 'fb bad'; fb.textContent = `Ainda faltam ${falta} perguntas por responder.`; const q = [...document.querySelectorAll('.q')].find(el => st.ans[+el.dataset.i] === undefined); if (q) q.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+  st.done = true; st.who = w; st.fim = Date.now(); st.score = Q.reduce((s, x, i) => s + (st.ans[i] === 0 ? 1 : 0), 0); save();
+  showResult(); $('#result').scrollIntoView({ behavior: 'smooth' });
+  enviar();
+});
+
+/* ---------- PDF e envio ---------- */
+const pdfTxt = s => String(s).replace(/[−–—]/g, '-').replace(/μ/g, 'u').replace(/[«»]/g, '"').replace(/·/g, '·').replace(/[✓]/g, 'certo').replace(/[✗]/g, 'errado').replace(/[^\x00-\xff]/g, '?');
+const slug = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9]+/g, '_').replace(/^_|_$/g, '').slice(0, 40);
+const fname = () => `UC1993_Teste_Componentes_${slug(st.who.nome)}_n${slug(st.who.num)}.pdf`;
+function makePDF() {
+  const { jsPDF } = window.jspdf; const doc = new jsPDF({ unit: 'mm', format: 'a4' }); const W = 210, M = 16; let y = 18;
+  const line = (txt, size = 10, bold = false, color = [20, 33, 61], gap = 1.5) => {
+    doc.setFont('helvetica', bold ? 'bold' : 'normal'); doc.setFontSize(size); doc.setTextColor(...color);
+    doc.splitTextToSize(pdfTxt(txt), W - 2 * M).forEach(l => { if (y > 280) { doc.addPage(); y = 18; } doc.text(l, M, y); y += size * 0.42 + gap; });
+  };
+  doc.setFillColor(13, 42, 94); doc.rect(0, 0, W, 30, 'F');
+  doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'bold'); doc.setFontSize(15); doc.text(pdfTxt('UC 1993 · Executar análise de circuitos RLC'), M, 13);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.text(pdfTxt(NOME_TESTE), M, 21);
+  doc.setFontSize(9); doc.text(pdfTxt('Professor Glauco Barbosa · ' + EMAIL_PROF + ' · EPAVE'), M, 27);
+  y = 40; const w = st.who;
+  line(`Nome: ${w.nome}`, 11, true); line(`Número: ${w.num}    Turma: ${w.turma}`, 11);
+  line(`Data: ${new Date(st.fim).toLocaleString('pt-PT')}`, 10, false, [85, 98, 124]); y += 2;
+  doc.setFillColor(237, 242, 250); doc.roundedRect(M, y - 6.5, W - 2 * M, 10.5, 2, 2, 'F');
+  line(`Resultado: ${st.score} certas em ${Q.length}  ·  Nota: ${nf(st.score)} valores (0-20)`, 12, true, [178, 72, 10], 4); y += 2;
+  let last = -1;
+  Q.forEach((x, i) => {
+    if (x.p !== last) { last = x.p; if (y > 255) { doc.addPage(); y = 18; } y += 2; line(`${PARTES[x.p].k} - ${PARTES[x.p].t}`, 11.5, true, [29, 111, 224], 2.5); }
+    if (y > 262) { doc.addPage(); y = 18; }
+    const a = st.ans[i], ok = a === 0;
+    line(`${i + 1}. (Figura ${i + 1}) ${x.q}`, 10.5, true);
+    line(`Resposta do aluno: ${letter(i, a)}) ${x.o[a]}  -  ${ok ? 'CERTA' : 'ERRADA'}`, 10, false, ok ? [23, 138, 74] : [198, 40, 40]);
+    if (!ok) line(`Resposta correta: ${letter(i, 0)}) ${x.o[0]}`, 10, false, [23, 138, 74]);
+    line(x.w, 9, false, [85, 98, 124], 3.5);
+  });
+  const n = doc.getNumberOfPages();
+  for (let p = 1; p <= n; p++) { doc.setPage(p); doc.setFontSize(8); doc.setTextColor(120, 130, 150); doc.text(pdfTxt(`${NOME_TESTE} · página ${p} de ${n}`), W / 2, 292, { align: 'center' }); }
+  return doc.output('blob');
+}
+async function savePDF(blob, name) {
+  try { if (window.claude && window.claude.use) { const dl = await window.claude.use('downloads'); if (dl) { await dl.save({ filename: name, data: blob }); return 'ok'; } } }
+  catch (e) { if (e && /declin|cancel|reject/i.test(String(e.code || e.message))) return 'cancel'; }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000); return 'ok';
+}
+const msg = (cls, t) => { const fb = $('#fb'); fb.className = 'fb ' + cls; fb.textContent = t; };
+async function enviar() {
+  if (!window.jspdf) { msg('bad', 'Não foi possível preparar o PDF. Verifique a ligação à internet e recarregue a página.'); return; }
+  const b = $('#send'); b.disabled = true; msg('ok', 'A enviar ao professor…');
+  try {
+    const blob = makePDF(), w = st.who, f = new FormData();
+    f.append('_subject', `UC 1993 · ${NOME_TESTE} · ${w.nome} (n.º ${w.num}, ${w.turma}) · ${nf(st.score)} valores`);
+    f.append('_template', 'table'); f.append('_captcha', 'false');
+    [['Teste', NOME_TESTE], ['Nome', w.nome], ['Número', w.num], ['Turma', w.turma], ['Certas', `${st.score} / ${Q.length}`], ['Nota (0-20)', nf(st.score)], ['Data', new Date(st.fim).toLocaleString('pt-PT')]].forEach(([k, v]) => f.append(k, v));
+    Q.forEach((x, i) => { const a = st.ans[i]; f.append(`Pergunta ${i + 1}`, `${x.o[a]}${a === 0 ? ' ✓' : ` ✗ (certa: ${x.o[0]})`}`); });
+    f.append('attachment', new File([blob], fname(), { type: 'application/pdf' }));
+    const r = await fetch(ENVIO_URL, { method: 'POST', headers: { Accept: 'application/json' }, body: f });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json().catch(() => ({}));
+    if (j && (j.success === false || j.success === 'false')) throw new Error(j.message || 'recusado');
+    st.sent = true; save(); msg('ok', '✓ Enviado ao professor. Pode também guardar o PDF para si.');
+  } catch (err) {
+    msg('bad', 'Não foi possível enviar daqui (' + (err && err.message ? err.message : 'sem ligação') + '). Carregue em «Descarregar PDF» e envie o ficheiro por email para ' + EMAIL_PROF + '.');
+  } finally { b.disabled = false; }
+}
+let resend = false;
+$('#send').addEventListener('click', () => {
+  if (st.sent && !resend) { resend = true; msg('ok', 'Este teste já foi enviado. Para voltar a enviar, carregue outra vez em «Enviar ao professor».'); return; }
+  resend = false; enviar();
+});
+$('#pdf').addEventListener('click', async () => {
+  if (!window.jspdf) { msg('bad', 'Não foi possível preparar o PDF.'); return; }
+  const r = await savePDF(makePDF(), fname()); if (r === 'ok') msg('ok', 'PDF preparado.');
+});
+render();
+if (st.sent) msg('ok', '✓ Este teste já foi enviado ao professor.');
+</script>
+</body>
+</html>
