@@ -100,7 +100,7 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline
     <ul class="rules">
       <li>O teste tem <b>20 perguntas</b> de escolha múltipla, em três partes: componentes reais, símbolos e sinais e marcações.</li>
       <li>Cada pergunta tem uma só resposta certa e vale 1 valor. Pode mudar a resposta até entregar.</li>
-      <li>Quando carregar em <b>«Entregar o teste»</b>, a nota e a correção aparecem, e o teste segue para o professor por email.</li>
+      <li>Quando carregar em <b>«Entregar o teste»</b>, a nota e a correção aparecem, e o resultado segue para o professor por email.</li>
       <li>Depois de entregue, as respostas já não podem ser alteradas.</li>
     </ul>
     <div class="row">
@@ -126,6 +126,12 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline
     <p style="color:var(--muted)">A correção está em cada pergunta: a verde a resposta certa, a vermelho a sua resposta quando está errada.</p>
     <div class="row"><button type="button" class="btn primary" id="send">Enviar ao professor</button><button type="button" class="btn" id="pdf">Descarregar PDF</button></div>
     <div class="fb" id="fb" role="status"></div>
+  </section>
+  <section class="panel" id="prof" hidden>
+    <h2 style="font-size:1.2rem">Professor: testar o envio</h2>
+    <p style="color:var(--muted)">Envia um email de teste para Epave.glauco@gmail.com. Se o FormSubmit pedir ativação, chega primeiro um email «Activate Form»: abra-o e carregue no botão.</p>
+    <div class="row"><button type="button" class="btn" id="ptest">Enviar email de teste</button></div>
+    <div class="fb" id="pfb" role="status"></div>
   </section>
   <p class="foot">Professor Glauco Barbosa · Epave.glauco@gmail.com · EPAVE</p>
 </main>
@@ -376,24 +382,33 @@ async function savePDF(blob, name) {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000); return 'ok';
 }
 const msg = (cls, t) => { const fb = $('#fb'); fb.className = 'fb ' + cls; fb.textContent = t; };
+// Envio pelo FormSubmit em JSON (a forma documentada para pedidos AJAX). O PDF não segue no email:
+// o FormSubmit não aceita ficheiros por AJAX. O aluno pode descarregá-lo com «Descarregar PDF».
+async function postFS(obj) {
+  const r = await fetch(ENVIO_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(obj) });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || (j && (j.success === false || j.success === 'false'))) throw new Error((j && j.message) || ('HTTP ' + r.status));
+  return j;
+}
+const errTxt = err => {
+  const m = String(err && err.message || '');
+  if (/activ/i.test(m)) return 'O envio por email ainda não está ativado. Avise o professor e carregue em «Descarregar PDF» para guardar o teste.';
+  return 'Não foi possível enviar daqui (' + (m || 'sem ligação') + '). Carregue em «Descarregar PDF» e envie o ficheiro por email para ' + EMAIL_PROF + '.';
+};
 async function enviar() {
-  if (!window.jspdf) { msg('bad', 'Não foi possível preparar o PDF. Verifique a ligação à internet e recarregue a página.'); return; }
   const b = $('#send'); b.disabled = true; msg('ok', 'A enviar ao professor…');
   try {
-    const blob = makePDF(), w = st.who, f = new FormData();
-    f.append('_subject', `UC 1993 · ${NOME_TESTE} · ${w.nome} (n.º ${w.num}, ${w.turma}) · ${nf(st.score)} valores`);
-    f.append('_template', 'table'); f.append('_captcha', 'false');
-    [['Teste', NOME_TESTE], ['Nome', w.nome], ['Número', w.num], ['Turma', w.turma], ['Certas', `${st.score} / ${Q.length}`], ['Nota (0-20)', nf(st.score)], ['Data', new Date(st.fim).toLocaleString('pt-PT')]].forEach(([k, v]) => f.append(k, v));
-    Q.forEach((x, i) => { const a = st.ans[i]; f.append(`Pergunta ${i + 1}`, `${x.o[a]}${a === 0 ? ' ✓' : ` ✗ (certa: ${x.o[0]})`}`); });
-    f.append('attachment', new File([blob], fname(), { type: 'application/pdf' }));
-    const r = await fetch(ENVIO_URL, { method: 'POST', headers: { Accept: 'application/json' }, body: f });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const j = await r.json().catch(() => ({}));
-    if (j && (j.success === false || j.success === 'false')) throw new Error(j.message || 'recusado');
+    const w = st.who, o = {
+      _subject: `UC 1993 · ${NOME_TESTE} · ${w.nome} (n.º ${w.num}, ${w.turma}) · ${nf(st.score)} valores`,
+      _template: 'table', _captcha: 'false',
+      'Teste': NOME_TESTE, 'Nome': w.nome, 'Número': w.num, 'Turma': w.turma,
+      'Certas': `${st.score} / ${Q.length}`, 'Nota (0-20)': nf(st.score), 'Data': new Date(st.fim).toLocaleString('pt-PT')
+    };
+    Q.forEach((x, i) => { const a = st.ans[i]; o[`Pergunta ${String(i + 1).padStart(2, '0')}`] = `${x.o[a]}${a === 0 ? ' ✓' : ` ✗ (certa: ${x.o[0]})`}`; });
+    await postFS(o);
     st.sent = true; save(); msg('ok', '✓ Enviado ao professor. Pode também guardar o PDF para si.');
-  } catch (err) {
-    msg('bad', 'Não foi possível enviar daqui (' + (err && err.message ? err.message : 'sem ligação') + '). Carregue em «Descarregar PDF» e envie o ficheiro por email para ' + EMAIL_PROF + '.');
-  } finally { b.disabled = false; }
+  } catch (err) { msg('bad', errTxt(err)); }
+  finally { b.disabled = false; }
 }
 let resend = false;
 $('#send').addEventListener('click', () => {
@@ -404,6 +419,15 @@ $('#pdf').addEventListener('click', async () => {
   if (!window.jspdf) { msg('bad', 'Não foi possível preparar o PDF.'); return; }
   const r = await savePDF(makePDF(), fname()); if (r === 'ok') msg('ok', 'PDF preparado.');
 });
+if (/professor/i.test(location.search + location.hash)) {
+  $('#prof').hidden = false;
+  $('#ptest').addEventListener('click', async () => {
+    const fb = $('#pfb'); fb.className = 'fb ok'; fb.textContent = 'A enviar…';
+    try { await postFS({ _subject: 'UC 1993 · TESTE DE LIGAÇÃO', _template: 'table', _captcha: 'false', 'Teste': NOME_TESTE, 'Enviado': new Date().toLocaleString('pt-PT') });
+      fb.textContent = '✓ Enviado. Veja o email (e a pasta Spam): deve chegar «UC 1993 · TESTE DE LIGAÇÃO».'; }
+    catch (e) { fb.className = 'fb bad'; fb.textContent = /activ/i.test(e.message) ? 'O FormSubmit enviou um email de ativação para ' + EMAIL_PROF + '. Abra-o (veja o Spam) e carregue em «Activate Form». Depois teste outra vez.' : 'Falhou: ' + e.message; }
+  });
+}
 render();
 if (st.sent) msg('ok', '✓ Este teste já foi enviado ao professor.');
 </script>

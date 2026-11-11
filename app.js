@@ -942,18 +942,15 @@ async function savePDF(blob, name) {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
   return 'ok';
 }
-async function sendResult(k, who, blob, name) {
+// Envio em JSON (a forma documentada do FormSubmit para AJAX); o PDF fica para descarregar.
+async function sendResult(k, who) {
   const Q = QUIZ[k], st = QSTATE[k], nota = nf(20 * st.score / Q.length, 1);
-  const f = new FormData();
-  f.append('_subject', `UC 1993 · ${NOMES_TESTE[k]} · ${who.nome} (n.º ${who.num}, ${who.turma}) · ${nota} valores`);
-  f.append('_template', 'table'); f.append('_captcha', 'false');
-  [['Teste', NOMES_TESTE[k]], ['Nome', who.nome], ['Número', who.num], ['Turma', who.turma], ['Certas', `${st.score} / ${Q.length}`], ['Nota (0-20)', nota], ['Data', st.fim.toLocaleString('pt-PT')]].forEach(([a, b]) => f.append(a, b));
-  Q.forEach((x, i) => { const j = st.ans[i]; f.append(`Pergunta ${i + 1}`, (j === undefined ? '—' : String.fromCharCode(65 + j)) + (j === x.a ? ' ✓' : ` ✗ (certa: ${String.fromCharCode(65 + x.a)})`)); });
-  f.append('attachment', new File([blob], name, { type: 'application/pdf' }));
-  const r = await fetch(ENVIO_URL, { method: 'POST', headers: { Accept: 'application/json' }, body: f });
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  const j = await r.json().catch(() => ({}));
-  if (j && (j.success === false || j.success === 'false')) throw new Error(j.message || 'recusado');
+  const o = { _subject: `UC 1993 · ${NOMES_TESTE[k]} · ${who.nome} (n.º ${who.num}, ${who.turma}) · ${nota} valores`, _template: 'table', _captcha: 'false' };
+  [['Teste', NOMES_TESTE[k]], ['Nome', who.nome], ['Número', who.num], ['Turma', who.turma], ['Certas', `${st.score} / ${Q.length}`], ['Nota (0-20)', nota], ['Data', st.fim.toLocaleString('pt-PT')]].forEach(([a, b]) => o[a] = b);
+  Q.forEach((x, i) => { const j = st.ans[i]; o[`Pergunta ${String(i + 1).padStart(2, '0')}`] = (j === undefined ? '—' : String.fromCharCode(65 + j)) + (j === x.a ? ' ✓' : ` ✗ (certa: ${String.fromCharCode(65 + x.a)})`); });
+  const r = await fetch(ENVIO_URL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(o) });
+  const res = await r.json().catch(() => ({}));
+  if (!r.ok || (res && (res.success === false || res.success === 'false'))) throw new Error((res && res.message) || ('HTTP ' + r.status));
 }
 
 $$('.quiz[data-quiz]').forEach(box => {
@@ -965,7 +962,7 @@ $$('.quiz[data-quiz]').forEach(box => {
       Q.map((x, i) => `<div class="qq" data-i="${i}"><p><b class="mono">${i + 1}.</b> ${x.q}</p><div class="opts">${x.o.map((o, j) => `<button type="button" data-j="${j}">${String.fromCharCode(65 + j)}) ${o}</button>`).join('')}</div><p class="why" hidden></p></div>`).join('') +
       `<div class="panel send" id="qe${k}">
         <span class="tag">Entrega</span><h4>Enviar o teste ao professor</h4>
-        <p style="color:var(--muted);font-size:.92rem">Responda a todas as perguntas, preencha os seus dados e carregue em «Enviar ao professor». O professor recebe um email com o resultado e o PDF do teste. Também pode guardar o PDF.</p>
+        <p style="color:var(--muted);font-size:.92rem">Responda a todas as perguntas, preencha os seus dados e carregue em «Enviar ao professor». O professor recebe um email com a nota e a resposta a cada pergunta. Também pode guardar o PDF do teste.</p>
         <div class="row">
           <div class="fld" style="flex:1 1 16em"><label for="qn${k}">Nome completo</label><input type="text" id="qn${k}" autocomplete="name" value="${who.nome.replace(/"/g, '&quot;')}"></div>
           <div class="fld"><label for="qm${k}">Número</label><input type="text" inputmode="numeric" id="qm${k}" value="${who.num.replace(/"/g, '&quot;')}" style="width:6em"></div>
@@ -982,16 +979,16 @@ $$('.quiz[data-quiz]').forEach(box => {
       const w = { nome: $('#qn' + k).value.trim(), num: $('#qm' + k).value.trim(), turma: $('#qt' + k).value.trim() };
       store.set('aluno', w); return w;
     };
-    const ready = () => {
+    const ready = (pdf = false) => {
       if (st.answered < Q.length) { msg('bad', `Ainda faltam ${Q.length - st.answered} perguntas por responder.`); return null; }
       const w = getWho();
       if (!w.nome || !w.num || !w.turma) { msg('bad', 'Preencha o nome, o número e a turma.'); return null; }
-      if (!window.jspdf) { msg('bad', 'Não foi possível preparar o PDF. Verifique a ligação à internet e recarregue a página.'); return null; }
+      if (pdf && !window.jspdf) { msg('bad', 'Não foi possível preparar o PDF. Verifique a ligação à internet e recarregue a página.'); return null; }
       return w;
     };
     const fname = w => `UC1993_Teste_Parte${k}_${slug(w.nome)}_n${slug(w.num)}.pdf`;
     $('#qpdf' + k).addEventListener('click', async () => {
-      const w = ready(); if (!w) return;
+      const w = ready(true); if (!w) return;
       const r = await savePDF(quizPDF(k, w), fname(w));
       if (r === 'ok') msg('ok', 'PDF preparado. Se o envio automático não funcionar, envie este PDF por email para ' + EMAIL_PROF + '.');
     });
@@ -1000,12 +997,11 @@ $$('.quiz[data-quiz]').forEach(box => {
       if (st.sent && !confirm_resend) { msg('ok', 'Este teste já foi enviado. Para voltar a enviar, carregue outra vez em «Enviar ao professor».'); confirm_resend = true; return; }
       const b = e.target; b.disabled = true; msg('ok', 'A enviar…');
       try {
-        const blob = quizPDF(k, w);
-        await sendResult(k, w, blob, fname(w));
+        await sendResult(k, w);
         st.sent = true; confirm_resend = false;
         msg('ok', '✓ Enviado ao professor. Pode também guardar o PDF para si.');
       } catch (err) {
-        msg('bad', 'Não foi possível enviar daqui (' + (err && err.message ? err.message : 'sem ligação') + '). Carregue em «Descarregar PDF» e envie o ficheiro por email para ' + EMAIL_PROF + '.');
+        msg('bad', /activ/i.test(String(err && err.message)) ? 'O envio por email ainda não está ativado. Avise o professor e carregue em «Descarregar PDF».' : 'Não foi possível enviar daqui (' + (err && err.message ? err.message : 'sem ligação') + '). Carregue em «Descarregar PDF» e envie o ficheiro por email para ' + EMAIL_PROF + '.');
       } finally { b.disabled = false; }
     });
     $$('.qq', box).forEach(qq => qq.addEventListener('click', e => {
